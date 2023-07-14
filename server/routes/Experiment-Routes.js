@@ -133,18 +133,24 @@ router.get("/:id/report", async (req, res) => {
   if (!experiment) {
     return res.status(404).send("Experiment not found.");
   }
+  
+  // Note: Update this part to match where you actually store report.pdf
+  const currentDate = new Date();
+  const day = String(currentDate.getDate()).padStart(2, "0");
+  const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+  const year = String(currentDate.getFullYear()).slice(-2);
+  const hours = String(currentDate.getHours()).padStart(2, "0");
+  const minutes = String(currentDate.getMinutes()).padStart(2, "0");
+  const experimentId = experiment.experimentId;
+  const DatenID = `${day}${month}${year}_${hours}${minutes}_${experimentId}`;
+  const reportPath = path.join("C:/Users/jonat/Desktop/ngs_app_galenvs/server/records", `experiment_data_${DatenID}`, "report.pdf");
 
-  const reportPath = path.join(
-    __dirname,
-    "records",
-    experiment._id.toString(),
-    "report.pdf"
-  );
   if (!fs.existsSync(reportPath)) {
     return res.status(404).send("Report not found.");
   }
 
   res.download(reportPath);
 });
+
 
 module.exports = router;

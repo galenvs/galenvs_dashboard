@@ -105,15 +105,21 @@ const FileUpload: React.FC<{
   const getReport = async () => {
     setIsLoading(true);
     try {
-      const reportUrl = `http://localhost:5000/api/${_id}/report`;  // Use the MongoDB document ID to create the report download URL
-      const response = await axios.get(reportUrl);
-      setReportUrl(response.data);
+      const reportUrl = `http://localhost:5000/api/${experimentId}/report`;
+      const response = await axios.get(reportUrl, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'report.pdf'); // adjust the file extension according to your case
+      document.body.appendChild(link);
+      link.click();
     } catch (error) {
       console.error("Failed to download report:", error);
     } finally {
       setIsLoading(false);
     }
   };
+  
   
 
   return (  
