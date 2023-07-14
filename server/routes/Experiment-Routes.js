@@ -102,16 +102,10 @@ router.post("/upload", upload, async (req, res) => {
     let barcodeSummaryPathForwardSlash = barcodeSummaryPath.replace(/\\/g, '/');
     let ampliconSummaryPathForwardSlash = ampliconSummaryPath.replace(/\\/g, '/');
     let depthFolderPathForwardSlash = depthFolderPath.replace(/\\/g, '/');
-    
-    // execSync(
-    //   `R -e "rmarkdown::render('${rMarkdownPathForwardSlash}', output_file = '${reportPathForwardSlash}', params <- list(Barcode_summary_path = '${barcodeSummaryPathForwardSlash}', Amplicon_summary_path = '${ampliconSummaryPathForwardSlash}', depth_files_folder_path = '${depthFolderPathForwardSlash}'))"`
-    // );
+   
     execSync(
       `R -e "rmarkdown::render('${rMarkdownPathForwardSlash}', output_file = '${reportPathForwardSlash}', params = list(Barcode_summary_path = '${barcodeSummaryPathForwardSlash}', Amplicon_summary_path = '${ampliconSummaryPathForwardSlash}', depth_files_folder_path = '${depthFolderPathForwardSlash}'))"`
     );
-    // execSync(
-    //   `R -e "rmarkdown::render('${rMarkdownPathForwardSlash}', output_file = '${reportPathForwardSlash}', params = list(list(Barcode_summary_path = '${barcodeSummaryPathForwardSlash}', Amplicon_summary_path = '${ampliconSummaryPathForwardSlash}', depth_files_folder_path = '${depthFolderPathForwardSlash}')))"`
-    // );
     
   } catch (err) {
     console.error(err);
