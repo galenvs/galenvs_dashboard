@@ -1,0 +1,250 @@
+---
+title: "Pharmacogenomics Next Generation Sequencing Run Quality Control Metrics"
+author: "Galenvs Sciences Inc."
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  bookdown::pdf_document2:
+    keep_tex: true
+    highlight: monochrome
+    toc: false
+    toc_depth: 2
+    number_sections: true
+    fig_caption: true
+header-includes:
+  \usepackage{float}
+  \floatplacement{figure}{H}
+  \usepackage{fvextra}
+  \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+  \usepackage[format=plain,labelfont={bf,it},textfont={}]{caption}
+  \usepackage{booktabs}
+  \usepackage{longtable}
+  \usepackage{lscape}
+  \newcommand{\blandscape}{\begin{landscape}}
+  \newcommand{\elandscape}{\end{landscape}}
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(tinytex.verbose = TRUE)
+library(tidyverse)
+library(ggpubr)
+library(knitr)
+library(kableExtra)
+library(scales)
+library(viridis)
+library(xtable)
+library(purrr)
+library(gplots)
+#qiacuityData <- "~/Documents/galenvs/cfDNA/qiacuity/data/2023-04-13"
+# library(formatR)
+# opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
+knitr::opts_knit$set(root.dir = "C:/Users/jonat/Desktop/ngs_app_galenvs/server/records/") 
+knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE,  class.output="shadebox")
+```
+
+
+```{r data import}
+#params<- list(
+#  Barcode_summary_path = "GalenvsPGx_Thermo_v2_Samples_1_to_14_torrent-server_67.bc_summary.xls",
+# Amplicon_summary_path = " ",
+#  depth_files_folder_path = "depth/"
+#  )
+params = list(Barcode_summary_path = 'experiment_data_140723_1108_day second /barcodeSummary_01_140723_1108_day second .xls', Amplicon_summary_path = 'experiment_data_140723_1108_day second /ampliconSummary_01_140723_1108_day second .xls', depth_files_folder_path = 'experiment_data_140723_1108_day second /depth_140723_1108_day second /')
+
+# Import Barcode Summary File
+bsf <- read_delim(params$Barcode_summary_path)
+
+# Import Depth Files
+files_to_read <- list.files(path = params$depth_files_folder_path, pattern = "\\.tsv$", full.names = T)
+all_files <- lapply(files_to_read, function(x) {
+   read.table(file = x, sep = '\t', header = TRUE)
+})
+names(all_files) <- files_to_read %>% gsub(".*//", "", .)
+
+# Import Amplicon Summary File
+amplicon <- read_delim(params$Amplicon_summary_path)
+```
+
+```{r newColumns}
+files2 <-
+          all_files %>% 
+            lapply(function(x) 
+            cbind(x, len = x$contig_end - x$contig_srt + 1)) %>%
+            lapply(function(x) 
+            cbind(x, rat500 = x$cov500x/x$len)) %>%  
+            lapply(function(x) 
+            cbind(x, rat2500 = x$cov2500x/x$len)) 
+
+```
+
+```{r bindRows}
+filesBind <- bind_rows(files2, .id="file")
+```
+
+```{r createSummary}
+summaryTibble <- bsf %>% dplyr::select(`Barcode ID`, `Sample Name`, `Mean Depth`, `Uniformity`)
+```
+
+
+```{r BaseDepthAnalysis}
+# Pass / Fail on Mean Depth
+    summaryTibble$`Depth QC Check` <- "FAIL"
+    summaryTibble$`Depth QC Check`[summaryTibble$ `Mean Depth` > 2500] <- "PASS"
+    
+# Which regions fail (amplicons that have less than 500X by sample)
+    baseDepthLess500 <- lapply(files2, function(x) filter(x, rat500 <1)) %>% lapply(function(x) select(x, region_id))
+```
+
+
+```{r UniformityAnalysis}
+# Pass / Fail on Mean Depth
+    summaryTibble$`Uniformity QC Check` <- "FAIL"
+    summaryTibble$`Uniformity QC Check`[summaryTibble$ `Uniformity` > 93] <- "ACCEPTABLE"
+    summaryTibble$`Uniformity QC Check`[summaryTibble$ `Uniformity` > 96] <- "OPTIMAL"
+```
+
+```{r AmpliconCoverageAnalysis}
+    longAmplicon <- amplicon %>% pivot_longer(cols = 3:ncol(amplicon))
+    coverageFreq <- longAmplicon %>% 
+      filter(value<500) %>% 
+      dplyr::select(name) %>% 
+      table() %>%
+      `/` (nrow(amplicon)) %>% 
+      as.data.frame()
+    
+    colnames(coverageFreq)[1] <- "Barcode ID"
+    coverageFreq$`Coverage QC Check` <- "FAIL"
+    coverageFreq$`Coverage QC Check`[coverageFreq$Freq < 0.05] <- "PASS"
+    
+    summaryTibble <- summaryTibble %>% full_join(coverageFreq[,c(1,3)])
+
+```
+
+```{r overallQC}
+summaryTibble <- summaryTibble %>% mutate(`Overall QC Checkpoint` = if_else(`Depth QC Check` == "PASS" & `Uniformity QC Check` == "ACCEPTABLE" | `Uniformity QC Check` == "ACCEPTABLE" & `Coverage QC Check` == "PASS", "PASS", "FAIL"))
+```
+
+
+# Summary
+
+```{r}
+summaryColours <- summaryTibble$`Overall QC Checkpoint` %>% gsub("PASS", "olive", .) %>% gsub("FAIL", "red", .)
+
+summaryTibble %>% 
+  dplyr::select(`Barcode ID`, `Sample Name`, `Depth QC Check`, `Uniformity QC Check`, `Coverage QC Check`, `Overall QC Checkpoint`) %>% 
+  sapply(function(x){str_wrap(x, 10)}) %>% 
+  kbl(booktabs=TRUE, longtable=TRUE, caption = "Summary of QC check results.")  %>% 
+  column_spec(1:6, width = paste0(c(2,2,1.6,3,1.6,1), "cm")) %>% 
+  column_spec(6, color=summaryColours)
+```
+\newpage
+
+\tableofcontents
+
+\newpage
+# Base Depth
+## Mean Depth
+The mean depth for each sample is shown in ***table \@ref(tab:meanDepthResults)***.
+
+```{r meanDepthResults}
+summaryTibble %>% 
+  dplyr::select(`Barcode ID`, `Sample Name`, `Mean Depth`, `Depth QC Check`) %>% 
+  kbl(booktabs=TRUE, longtable=TRUE, caption = "Mean Depth Results.")
+```
+
+## Regions with <100% Bases Read 500X (by Sample)
+
+The distribution of the fraction of bases read 500X in a given amplicon is shown in ***figure \@ref(fig:depthHeatmap)***.
+
+```{r depthHeatmap, fig.cap="Heatmap showing the distribution of the fraction of bases read 500X in a given amplicon. Rows represent amplicons and columns represent samples", fig.height=12, fig.width=12, fig.scap= "Depth 500X Heatmap"}
+wideFiles <- filesBind %>% select(file, region_id, rat500) %>% pivot_wider(names_from = file, values_from = rat500) %>% as.data.frame()
+rownames(wideFiles) <- wideFiles$region_id
+wideMatrix <- wideFiles[,2:ncol(wideFiles)] %>% as.matrix
+
+wideMatrix %>% heatmap.2(col=turbo,trace="none", labRow = "")
+```
+
+
+The following regions do not meet the criteria of having 100% of bases read 500X (by sample). The total number of unique regions that do not meet this criteria across samples is `r baseDepthLess500 %>% lapply(function(x){as.vector(x)}) %>% unlist() %>% unique() %>% length()` regions.
+
+```{r}
+baseDepthLess500 %>% lapply(function(x){as.vector(x)})
+```
+
+## Intersect Between Regions with <100% Bases Read 500X in at least Half of the Samples
+
+The following `r baseDepthLess500 %>% lapply(function(x){as.vector(x)}) %>% unlist() %>% unique() %>% length()` regions have <100% bases read 500X in at least one sample.
+
+```{r}
+baseDepthLess500 %>% lapply(function(x){as.vector(x)}) %>% unlist() %>% unique()
+```
+
+
+```{r}
+
+halfSamples <- length(baseDepthLess500) /2
+
+depthFlagOverall <- baseDepthLess500 %>% lapply(function(x){as.vector(x)}) %>% unlist() %>% table()
+depthFlagIntersectHalf <- depthFlagOverall[depthFlagOverall > halfSamples] %>% names()
+
+```
+
+The following `r depthFlagIntersectHalf %>% length()` regions have <100% bases read 500X in at least half of the samples.
+
+```{r}
+depthFlagIntersectHalf
+```
+
+\newpage
+
+# Amplicon Coverage
+
+## Coverage Frequency
+
+The fraction of amplicons in each sample that are not covered at least 500X is shown in ***table \@ref(tab:coverageFrequencyResults)***.
+
+```{r coverageFrequencyResults}
+summaryTibble %>% full_join(coverageFreq) %>% 
+  dplyr::select(`Barcode ID`, `Sample Name`, `Freq`, `Coverage QC Check`) %>% 
+  kbl(booktabs=TRUE, longtable=TRUE,   caption = "Coverage Frequency Results. `Freq` is the fraction of amplicons that are not covered at least 500X.")
+```
+
+The distribution of the coverage of amplicons is shown in ***figure \@ref(fig:coverageHeatmap)***.
+
+```{r coverageHeatmap, fig.cap="Heatmap showing the distribution of the coverage of each amplicon. Rows represent amplicons and columns represent samples", fig.height=12, fig.width=12, fig.scap= "Coverage Heatmap"}
+
+ampMatrix <- amplicon[3:ncol(amplicon)] %>% as.matrix()
+rownames(ampMatrix) <- amplicon$Target
+
+ampMatrix  %>% heatmap.2(col=turbo,trace="none", labRow = "")
+```
+
+
+## Intersect Between Regions covered <500X in at least Half of the Samples
+
+The following amplicons were covered less than 500X in at least half of the samples.
+
+```{r}
+amplicon2 <- amplicon
+amplicon2[,3:ncol(amplicon2)] <- amplicon[,3:ncol(amplicon)] > 500
+amplicon2[,3:ncol(amplicon2)] <- amplicon2[,3:ncol(amplicon2)] %>% sapply(function(x){as.integer(x)})
+amplicon2$rowSums <- rowSums(amplicon2[,3:ncol(amplicon2)])
+
+amplicon2 %>% dplyr::filter(rowSums<halfSamples) %>% dplyr::select(Target) %>% as.vector()
+```
+
+\newpage
+
+# Uniformity
+
+The uniformity results for each sample are shown in ***table \@ref(tab:uniformityTable)***.
+
+
+```{r uniformityTable}
+summaryTibble %>% 
+  dplyr::select(`Barcode ID`, `Sample Name`, `Uniformity`, `Uniformity QC Check`)  %>% 
+  kbl(booktabs=TRUE, longtable=TRUE, caption = "Uniformity Results.")
+```
+
+
