@@ -83,12 +83,14 @@ router.post("/upload", upload, async (req, res) => {
   
   const DatenID = `${day}${month}${year}_${hours}${minutes}_${experimentId}`;
   const recordPath = path.join("C:/Users/jonat/Desktop/ngs_app_galenvs/server/records", `experiment_data_${DatenID}`);
-  const depthFolderPath = path.join(recordPath, `depth_${DatenID}`, `/\/`);
+   // const recordPath = path.join("/home/testvm/ngs_dashboard/server/records", `experiment_data_${DatenID}`);
+  const depthFolderPath = path.join(recordPath, `depth_${DatenID}`, '/' ); 
 
   const barcodeSummaryPath = path.join(recordPath, barcodeSummary[0].filename);
   const ampliconSummaryPath = path.join(recordPath, ampliconSummary[0].filename);
 
   const rMarkdownPath = path.join("C:/Users/jonat/Desktop/ngs_app_galenvs/server/core", "pgx_qc.Rmd");
+   // const recordPath = path.join("/home/testvm/ngs_dashboard/server/core", "pgx_qc.Rmd");
   const reportPath = path.join(recordPath, "report.pdf");
 
   // Execute R markdown
@@ -144,7 +146,7 @@ router.get("/:id/report", async (req, res) => {
   const experimentId = experiment.experimentId;
   const DatenID = `${day}${month}${year}_${hours}${minutes}_${experimentId}`;
   const reportPath = path.join("C:/Users/jonat/Desktop/ngs_app_galenvs/server/records", `experiment_data_${DatenID}`, "report.pdf");
-
+  // const reportPath = path.join("/home/testvm/ngs_dashboard/server/records", `experiment_data_${DatenID}`, "report.pdf");
   if (!fs.existsSync(reportPath)) {
     return res.status(404).send("Report not found.");
   }

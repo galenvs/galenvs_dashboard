@@ -10,6 +10,10 @@ output:
     toc_depth: 2
     number_sections: true
     fig_caption: true
+params:
+  Barcode_summary_path: ""
+  Amplicon_summary_path: ""
+  depth_files_folder_path: ""    
 header-includes:
   \usepackage{float}
   \floatplacement{figure}{H}
@@ -22,7 +26,6 @@ header-includes:
   \newcommand{\blandscape}{\begin{landscape}}
   \newcommand{\elandscape}{\end{landscape}}
 ---
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -40,6 +43,7 @@ library(gplots)
 # library(formatR)
 # opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
 knitr::opts_knit$set(root.dir = "C:/Users/jonat/Desktop/ngs_app_galenvs/server/records/") 
+# knitr::opts_knit$set(root.dir = "/home/testvm/ngs_dashboard/server/records/") 
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE,  class.output="shadebox")
 ```
 
@@ -50,7 +54,7 @@ knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE,  class.output=
 # Amplicon_summary_path = " ",
 #  depth_files_folder_path = "depth/"
 #  )
-params = list(Barcode_summary_path = 'experiment_data_140723_1108_day second /barcodeSummary_01_140723_1108_day second .xls', Amplicon_summary_path = 'experiment_data_140723_1108_day second /ampliconSummary_01_140723_1108_day second .xls', depth_files_folder_path = 'experiment_data_140723_1108_day second /depth_140723_1108_day second /')
+# params = list(Barcode_summary_path = 'experiment_data_140723_1108_day second /barcodeSummary_01_140723_1108_day second .xls', Amplicon_summary_path = 'experiment_data_140723_1108_day second /ampliconSummary_01_140723_1108_day second .xls', depth_files_folder_path = 'experiment_data_140723_1108_day second /depth_140723_1108_day second /')
 
 # Import Barcode Summary File
 bsf <- read_delim(params$Barcode_summary_path)
