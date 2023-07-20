@@ -1,7 +1,3 @@
-Sure, here's a rough draft for your README:
-
----
-
 # NGS Dashboard
 
 ## Project Description
