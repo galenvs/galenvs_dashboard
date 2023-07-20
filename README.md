@@ -11,10 +11,10 @@ NGS Dashboard is a web application that provides an intuitive interface for user
 The project is built using the MERN stack with TypeScript. The report generation is accomplished using R Markdown. Here's a brief overview of the tech stack:
 
 - MongoDB: A source-available cross-platform document-oriented database program.
-- Express.js: A back end web application framework for Node.js.
+- Express.js: A back-end web application framework for Node.js.
 - React.js: A JavaScript library for building user interfaces.
 - Node.js: A JavaScript runtime built on Chrome's V8 JavaScript engine.
-- TypeScript: An open-source language which builds on JavaScript by adding static type definitions.
+- TypeScript: An open-source language that builds on JavaScript by adding static type definitions.
 - R Markdown: An authoring format that enables easy creation of dynamic documents, presentations, and reports from R.
 
 ## Setup and Installation
