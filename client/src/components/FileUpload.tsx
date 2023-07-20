@@ -8,8 +8,6 @@ When the user submits the form, the component sends a multipart form data reques
 The component also handles validation (checking that all required fields are filled and that the uploaded files have the correct extensions), progress indication, and error handling.
 */
 
-
-
 import React, { useState } from "react";
 import axios from "axios";
 import {
@@ -54,7 +52,7 @@ const FileUpload: React.FC<{
     setExperimentId(event.target.value.replace(/\s/g, ""));
   };
 
- // Function to handle changes in the file drop zones
+  // Function to handle changes in the file drop zones
   const onFileChange = (
     files: File[],
     type: "barcodeSummary" | "ampliconSummary" | "depthFiles"
@@ -74,7 +72,7 @@ const FileUpload: React.FC<{
     }
   };
 
- // Function to handle the file upload process
+  // Function to handle the file upload process
   const onFileUpload = async () => {
     // Validation
     if (
@@ -118,7 +116,7 @@ const FileUpload: React.FC<{
 
     setIsLoading(false);
   };
-  
+
   // Function to handle the report download process
   const getReport = async () => {
     setIsLoading(true);
@@ -142,7 +140,7 @@ const FileUpload: React.FC<{
     <Container maxWidth="md" sx={{ marginTop: "2rem", marginBottom: "2rem" }}>
       <Grid container justifyContent="center" alignItems="center" spacing={3}>
         <Link to="/zip-upload">
-          <StyledButton variant="contained" color="primary" >
+          <StyledButton variant="contained" color="primary">
             Upload ZIP File <ArrowForwardIosIcon fontSize="inherit" />
           </StyledButton>
         </Link>
@@ -240,13 +238,11 @@ const FileUpload: React.FC<{
                     experimentId.trim().length === 0
                   }
                 >
-                            {isLoading ? (
-            <CircularProgress size={24} />
-          ) : (
-            "Generate Report"
-          )}
-                  
-
+                  {isLoading ? (
+                    <CircularProgress size={24} />
+                  ) : (
+                    "Generate Report"
+                  )}
                 </StyledButton>
 
                 {reportGenerated && (
@@ -260,7 +256,6 @@ const FileUpload: React.FC<{
                   </IconButton>
                 )}
               </StyledBox>
-
 
               {error && <Alert severity="error">{error}</Alert>}
 

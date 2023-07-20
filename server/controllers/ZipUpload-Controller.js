@@ -7,13 +7,16 @@ These include uploading a zip file and generating a report (uploadZip), and gett
 The uploadZip function takes a multipart form data request with a zip file, extracts the zip file, processes the extracted files, saves the experiment data to the database, and generates a report using an R script.
 The getZipReport function takes the id of an experiment as a parameter and sends the corresponding report file to the client.
 */
-
 const extract = require('extract-zip');
 const Experiment = require("../models/Experiment-Model");
 const fs = require('fs');
 const path = require('path');
-const {execSync} = require("child_process");
-const { generateDatenID } = require('../utilities');
+const {
+    execSync
+} = require("child_process");
+const {
+    generateDatenID
+} = require('../utilities');
 
 
 /**
@@ -42,7 +45,7 @@ const uploadZip = async (req, res) => {
                 console.log(`Deleted zip file: ${zipFilePath}`);
             }
         });
-        
+
         // process files
         const depthDir = path.join(destinationPath, `depth_${DatenID}`);
         fs.mkdirSync(depthDir, {
@@ -64,11 +67,11 @@ const uploadZip = async (req, res) => {
                 recursive: true
             });
         }
-  // Save experiment
-  const experiment = new Experiment({
-    experimentId: req.body.experimentId,
-  });
-  await experiment.save();
+        // Save experiment
+        const experiment = new Experiment({
+            experimentId: req.body.experimentId,
+        });
+        await experiment.save();
         // identify barcodeSummary and ampliconSummary files
         const filesInRoot = fs.readdirSync(destinationPath);
         const barcodeSummary = filesInRoot.find(file => file.endsWith("bc_summary.xls"));
@@ -105,7 +108,7 @@ const uploadZip = async (req, res) => {
             return res.status(500).send("Error in R script execution.");
         }
         res.json({
-          _id: experiment._id
+            _id: experiment._id
         });
     } catch (err) {
         console.error("Failed to extract and process zip file", err);
