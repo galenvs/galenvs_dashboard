@@ -25,7 +25,7 @@ To set up and install the NGS Dashboard on your local machine, follow these step
 3. Install the dependencies:
    - For the server, navigate into the server directory (`cd server`) and run `npm install`.
    - For the client, navigate into the client directory (`cd client`) and run `npm install`.
-   - Note: If you encounter any issues installing Material-UI in the client, try installing the packages individually with npm install @material-ui/core and npm install @material-ui/icons.
+   - Note: If you encounter any issues installing Material-UI in the client, try installing the packages individually with `npm install @material-ui/core` and `npm install @material-ui/icons`.
 4. Create a `.env` file in the server directory and fill it with your environment variables.
 5. Start the server by running `npm run dev` in the server directory.
 6. In a separate terminal, start the client by running `npm run dev -- --host` in the client directory.
