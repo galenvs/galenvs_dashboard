@@ -1,0 +1,9 @@
+\contentsline {section}{\numberline {1}Summary}{1}{section.1}%
+\contentsline {section}{\numberline {2}Base Depth}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Mean Depth}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Regions with \textless 100\% Bases Read 500X (by Sample)}{3}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Intersect Between Regions with \textless 100\% Bases Read 500X in at least Half of the Samples}{19}{subsection.2.3}%
+\contentsline {section}{\numberline {3}Amplicon Coverage}{22}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Coverage Frequency}{22}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Intersect Between Regions covered \textless 500X in at least Half of the Samples}{23}{subsection.3.2}%
+\contentsline {section}{\numberline {4}Uniformity}{24}{section.4}%

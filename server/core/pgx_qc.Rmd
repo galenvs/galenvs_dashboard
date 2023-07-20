@@ -42,7 +42,7 @@ library(gplots)
 #qiacuityData <- "~/Documents/galenvs/cfDNA/qiacuity/data/2023-04-13"
 # library(formatR)
 # opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
-knitr::opts_knit$set(root.dir = "C:/Users/jonat/Desktop/ngs_app_galenvs/server/records/") 
+knitr::opts_knit$set(root.dir = "C:/Users/jonat/Desktop/ngs_dashboard/server/records/") 
 # knitr::opts_knit$set(root.dir = "/home/testvm/ngs_dashboard/server/records/") 
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE,  class.output="shadebox")
 ```
@@ -60,7 +60,7 @@ knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE,  class.output=
 bsf <- read_delim(params$Barcode_summary_path)
 
 # Import Depth Files
-files_to_read <- list.files(path = params$depth_files_folder_path, pattern = "\\.tsv$", full.names = T)
+files_to_read <- list.files(path = params$depth_files_folder_path, pattern = "\\.xls$", full.names = T)
 all_files <- lapply(files_to_read, function(x) {
    read.table(file = x, sep = '\t', header = TRUE)
 })

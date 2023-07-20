@@ -6,17 +6,23 @@ const path = require("path");
 const fs = require("fs");
 const router = express.Router();
 
+
+// Function to generate DatenID
+function generateDatenID(experimentId) {
+  const currentDate = new Date();
+  const day = String(currentDate.getDate()).padStart(2, "0");
+  const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+  const year = String(currentDate.getFullYear()).slice(-2);
+  const hours = String(currentDate.getHours()).padStart(2, "0");
+  const minutes = String(currentDate.getMinutes()).padStart(2, "0");
+  
+  return `${day}${month}${year}_${hours}${minutes}_${experimentId}`;
+}
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const currentDate = new Date();
-    const day = String(currentDate.getDate()).padStart(2, "0");
-    const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Months are zero-based
-    const year = String(currentDate.getFullYear()).slice(-2);
-    const hours = String(currentDate.getHours()).padStart(2, "0");
-    const minutes = String(currentDate.getMinutes()).padStart(2, "0");
-    const experimentId = req.body.experimentId; // Assuming the experimentId is available in the request body
-
-    const DatenID = `${day}${month}${year}_${hours}${minutes}_${experimentId}`;
+    const experimentId = req.body.experimentId;
+    const DatenID = generateDatenID(experimentId);
     const experimentPath = path.join("./records", `experiment_data_${DatenID}`);
     const destinationPath =
       file.fieldname === "depthFiles"
@@ -35,15 +41,8 @@ const storage = multer.diskStorage({
     const prefix = fieldnameMappings[fieldname] || "";
     const fileCount = req.files[fieldname]?.length || 0;
     const originalExtension = file.originalname.split(".").pop();
-    const currentDate = new Date();
-    const day = String(currentDate.getDate()).padStart(2, "0");
-    const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Months are zero-based
-    const year = String(currentDate.getFullYear()).slice(-2);
-    const hours = String(currentDate.getHours()).padStart(2, "0");
-    const minutes = String(currentDate.getMinutes()).padStart(2, "0");
-    const experimentId = req.body.experimentId; // Assuming the experimentId is available in the request body
-
-    const DatenID = `${day}${month}${year}_${hours}${minutes}_${experimentId}`;
+    const experimentId = req.body.experimentId; 
+    const DatenID = generateDatenID(experimentId);
     const uniqueFileName = `${prefix}_${fileCount
       .toString()
       .padStart(2, "0")}_${DatenID}.${originalExtension}`;
@@ -73,24 +72,15 @@ router.post("/upload", upload, async (req, res) => {
   await experiment.save();
 
   // Construct paths
-  const currentDate = new Date();
-  const day = String(currentDate.getDate()).padStart(2, "0");
-  const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Months are zero-based
-  const year = String(currentDate.getFullYear()).slice(-2);
-  const hours = String(currentDate.getHours()).padStart(2, "0");
-  const minutes = String(currentDate.getMinutes()).padStart(2, "0");
   const experimentId = req.body.experimentId;
-  
-  const DatenID = `${day}${month}${year}_${hours}${minutes}_${experimentId}`;
-  const recordPath = path.join("C:/Users/jonat/Desktop/ngs_app_galenvs/server/records", `experiment_data_${DatenID}`);
-   // const recordPath = path.join("/home/testvm/ngs_dashboard/server/records", `experiment_data_${DatenID}`);
-  const depthFolderPath = path.join(recordPath, `depth_${DatenID}`, '/' ); 
+  const DatenID = generateDatenID(experimentId);
+  const recordPath = path.join("C:/Users/jonat/Desktop/ngs_dashboard/server/records", `experiment_data_${DatenID}`);
+  const depthFolderPath = path.join(recordPath, `depth_${DatenID}`, '/');
 
   const barcodeSummaryPath = path.join(recordPath, barcodeSummary[0].filename);
   const ampliconSummaryPath = path.join(recordPath, ampliconSummary[0].filename);
 
-  const rMarkdownPath = path.join("C:/Users/jonat/Desktop/ngs_app_galenvs/server/core", "pgx_qc.Rmd");
-   // const recordPath = path.join("/home/testvm/ngs_dashboard/server/core", "pgx_qc.Rmd");
+  const rMarkdownPath = path.join("C:/Users/jonat/Desktop/ngs_dashboard/server/core", "pgx_qc.Rmd");
   const reportPath = path.join(recordPath, "report.pdf");
 
   // Execute R markdown
@@ -104,11 +94,11 @@ router.post("/upload", upload, async (req, res) => {
     let barcodeSummaryPathForwardSlash = barcodeSummaryPath.replace(/\\/g, '/');
     let ampliconSummaryPathForwardSlash = ampliconSummaryPath.replace(/\\/g, '/');
     let depthFolderPathForwardSlash = depthFolderPath.replace(/\\/g, '/');
-   
+
     execSync(
       `R -e "rmarkdown::render('${rMarkdownPathForwardSlash}', output_file = '${reportPathForwardSlash}', params = list(Barcode_summary_path = '${barcodeSummaryPathForwardSlash}', Amplicon_summary_path = '${ampliconSummaryPathForwardSlash}', depth_files_folder_path = '${depthFolderPathForwardSlash}'))"`
     );
-    
+
   } catch (err) {
     console.error(err);
     return res.status(500).send("Error in R script execution.");
@@ -135,24 +125,21 @@ router.get("/:id/report", async (req, res) => {
   if (!experiment) {
     return res.status(404).send("Experiment not found.");
   }
-  
-  // Note: Update this part to match where you actually store report.pdf
-  const currentDate = new Date();
-  const day = String(currentDate.getDate()).padStart(2, "0");
-  const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Months are zero-based
-  const year = String(currentDate.getFullYear()).slice(-2);
-  const hours = String(currentDate.getHours()).padStart(2, "0");
-  const minutes = String(currentDate.getMinutes()).padStart(2, "0");
+
   const experimentId = experiment.experimentId;
-  const DatenID = `${day}${month}${year}_${hours}${minutes}_${experimentId}`;
-  const reportPath = path.join("C:/Users/jonat/Desktop/ngs_app_galenvs/server/records", `experiment_data_${DatenID}`, "report.pdf");
-  // const reportPath = path.join("/home/testvm/ngs_dashboard/server/records", `experiment_data_${DatenID}`, "report.pdf");
+  const DatenID = generateDatenID(experimentId);
+  const reportPath = path.join("C:/Users/jonat/Desktop/ngs_dashboard/server/records", `experiment_data_${DatenID}`, "report.pdf");
   if (!fs.existsSync(reportPath)) {
     return res.status(404).send("Report not found.");
   }
 
-  res.download(reportPath);
-});
+  const reportName = `report_${DatenID}.pdf`;
 
+  
+  console.log("Sending report file:", reportPath);
+  console.log("Suggested filename for client:", reportName);
+
+  res.download(reportPath, reportName);
+});
 
 module.exports = router;
