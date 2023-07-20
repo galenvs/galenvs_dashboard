@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Box } from '@mui/material'; 
-import logo from '../../assets/ngs.svg';
+import logo from '../../assets/ngslogo.svg';
 
 const Navbar: React.FC = () => {
   return (
