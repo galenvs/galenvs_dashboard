@@ -1,3 +1,15 @@
+// FileUpload Component
+// Author: Jonathan Haddad
+// Date created: 20-07-2023
+
+/* Description: This TypeScript React component is used for uploading experiment-related files and generating a report. 
+It provides a form for the user to enter an experiment id and to upload a barcode summary file, an amplicon summary file, and multiple depth files. 
+When the user submits the form, the component sends a multipart form data request to the server, receives the id of the saved experiment, and displays a download button for the generated report.
+The component also handles validation (checking that all required fields are filled and that the uploaded files have the correct extensions), progress indication, and error handling.
+*/
+
+
+
 import React, { useState } from "react";
 import axios from "axios";
 import {
@@ -37,11 +49,12 @@ const FileUpload: React.FC<{
   const [success, setSuccess] = useState<string | null>(null);
   const [reportGenerated, setReportGenerated] = useState(false);
 
-  // handle input changes
+  // Function to handle changes in the experiment ID input field
   const onExperimentIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setExperimentId(event.target.value.replace(/\s/g, ""));
   };
 
+ // Function to handle changes in the file drop zones
   const onFileChange = (
     files: File[],
     type: "barcodeSummary" | "ampliconSummary" | "depthFiles"
@@ -61,7 +74,9 @@ const FileUpload: React.FC<{
     }
   };
 
+ // Function to handle the file upload process
   const onFileUpload = async () => {
+    // Validation
     if (
       !barcodeSummary ||
       !ampliconSummary ||
@@ -103,7 +118,8 @@ const FileUpload: React.FC<{
 
     setIsLoading(false);
   };
-
+  
+  // Function to handle the report download process
   const getReport = async () => {
     setIsLoading(true);
     try {

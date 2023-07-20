@@ -1,3 +1,14 @@
+// ZipUpload Component
+// Author: Jonathan Haddad
+// Date created: 20-07-2023
+
+/* Description: This TypeScript React component is used for uploading a zip file that contains experiment-related files and generating a report. 
+It provides a form for the user to enter an experiment id and to upload a zip file. 
+When the user submits the form, the component sends a multipart form data request to the server, receives the id of the saved experiment, and displays a download button for the generated report.
+The component also handles validation (checking that all required fields are filled and that the uploaded file has the correct extension), progress indication, and error handling.
+*/
+
+
 import React, { useState } from "react";
 import { IconButton, TextField, CircularProgress, Alert, Container } from "@mui/material";
 import { DropzoneArea } from "material-ui-dropzone";
@@ -23,14 +34,18 @@ const ZipUpload: React.FC<{
   const [success, setSuccess] = useState<string | null>(null);
   const [reportGenerated, setReportGenerated] = useState(false);
 
+
+// Function to handle changes in the experiment ID input field
   const onExperimentIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setExperimentId(event.target.value.replace(/\s/g, ""));
   };
 
+// Function to handle changes in the file drop zone
   const onFileChange = (files: File[]) => {
     setSelectedFile(files[0]);
   };
 
+ // Function to handle the file upload process
   const onFileUpload = async () => {
     if (!selectedFile || !experimentId) {
         alert("Please add the zip file and enter experiment id.");
@@ -63,6 +78,7 @@ const ZipUpload: React.FC<{
     setIsLoading(false);
 };
 
+// Function to handle the report download process
 const getReport = async () => {
     setIsLoading(true);
     try {
