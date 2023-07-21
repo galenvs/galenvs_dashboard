@@ -8,14 +8,10 @@ The uploadExperiment function takes a multipart form data request, saves the exp
 The getReport function takes the id of an experiment as a parameter and sends the corresponding report file to the client.
 */
 const Experiment = require("../models/Experiment-Model");
-const fs = require('fs');
-const path = require('path');
-const {
-    execSync
-} = require("child_process");
-const {
-    generateDatenID
-} = require('../utilities');
+const fs = require("fs");
+const path = require("path");
+const { execSync } = require("child_process");
+const { generateDatenID } = require("../utilities");
 
 /**
  * @desc Uploads experiment data and generates a report
@@ -24,59 +20,51 @@ const {
  * @returns {Object} - Returns the id of the saved experiment
  */
 const uploadExperiment = async (req, res) => {
-    const {
-        barcodeSummary,
-        ampliconSummary,
-        depthFiles
-    } = req.files;
+  const { barcodeSummary, ampliconSummary, depthFiles } = req.files;
 
-    // Save experiment
-    const experiment = new Experiment({
-        experimentId: req.body.experimentId,
-        barcodeSummaryFile: barcodeSummary[0].path,
-        ampliconSummaryFile: ampliconSummary[0].path,
-        depthFiles: depthFiles.map((file) => file.path),
-    });
-    await experiment.save();
+  // Save experiment
+  const experiment = new Experiment({
+    experimentId: req.body.experimentId,
+    barcodeSummaryFile: barcodeSummary[0].path,
+    ampliconSummaryFile: ampliconSummary[0].path,
+    depthFiles: depthFiles.map((file) => file.path),
+  });
+  await experiment.save();
 
-    // Construct paths
-    const experimentId = req.body.experimentId;
-    const DatenID = generateDatenID(experimentId);
-    const recordPath = path.join("C:/Users/jonat/Desktop/ngs_dashboard/server/records", `experiment_data_${DatenID}`);
-    const depthFolderPath = path.join(recordPath, `depth_${DatenID}`, '/');
+  // Construct paths
+  const experimentId = req.body.experimentId;
+  const DatenID = generateDatenID(experimentId);
+  const recordPath = path.join(process.env.RECORDS_PATH, `experiment_data_${DatenID}`);
+  const depthFolderPath = path.join(recordPath, `depth_${DatenID}`, "/");
 
-    const barcodeSummaryPath = path.join(recordPath, barcodeSummary[0].filename);
-    const ampliconSummaryPath = path.join(recordPath, ampliconSummary[0].filename);
+  const barcodeSummaryPath = path.join(recordPath, barcodeSummary[0].filename);
+  const ampliconSummaryPath = path.join(recordPath, ampliconSummary[0].filename);
 
-    const rMarkdownPath = path.join("C:/Users/jonat/Desktop/ngs_dashboard/server/core", "pgx_qc.Rmd");
-    const reportPath = path.join(recordPath, "report.pdf");
+  const rMarkdownPath = path.join(process.env.CORE_PATH, "pgx_qc.Rmd");
+  const reportPath = path.join(recordPath, "report.pdf");
 
-    // Execute R markdown
-    console.log(barcodeSummaryPath);
-    console.log(ampliconSummaryPath);
-    console.log(depthFolderPath);
+  // Execute R markdown
+  console.log(barcodeSummaryPath);
+  console.log(ampliconSummaryPath);
+  console.log(depthFolderPath);
 
-    try {
+  try {
+    // remove the "/" with "\\" to avoid issues with tex files
+    let rMarkdownPathForwardSlash = rMarkdownPath.replace(/\\/g, "/");
+    let reportPathForwardSlash = reportPath.replace(/\\/g, "/");
+    let barcodeSummaryPathForwardSlash = barcodeSummaryPath.replace(/\\/g, "/");
+    let ampliconSummaryPathForwardSlash = ampliconSummaryPath.replace(/\\/g, "/");
+    let depthFolderPathForwardSlash = depthFolderPath.replace(/\\/g, "/");
 
-        // remove the "/" with "\\" to avoid issues with tex files
-        let rMarkdownPathForwardSlash = rMarkdownPath.replace(/\\/g, '/');
-        let reportPathForwardSlash = reportPath.replace(/\\/g, '/');
-        let barcodeSummaryPathForwardSlash = barcodeSummaryPath.replace(/\\/g, '/');
-        let ampliconSummaryPathForwardSlash = ampliconSummaryPath.replace(/\\/g, '/');
-        let depthFolderPathForwardSlash = depthFolderPath.replace(/\\/g, '/');
+    execSync(`R -e "rmarkdown::render('${rMarkdownPathForwardSlash}', output_file = '${reportPathForwardSlash}', params = list(Barcode_summary_path = '${barcodeSummaryPathForwardSlash}', Amplicon_summary_path = '${ampliconSummaryPathForwardSlash}', depth_files_folder_path = '${depthFolderPathForwardSlash}'))"`);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Error in R script execution.");
+  }
 
-        execSync(
-            `R -e "rmarkdown::render('${rMarkdownPathForwardSlash}', output_file = '${reportPathForwardSlash}', params = list(Barcode_summary_path = '${barcodeSummaryPathForwardSlash}', Amplicon_summary_path = '${ampliconSummaryPathForwardSlash}', depth_files_folder_path = '${depthFolderPathForwardSlash}'))"`
-        );
-
-    } catch (err) {
-        console.error(err);
-        return res.status(500).send("Error in R script execution.");
-    }
-
-    res.json({
-        _id: experiment._id
-    });
+  res.json({
+    _id: experiment._id,
+  });
 };
 
 /**
@@ -85,32 +73,29 @@ const uploadExperiment = async (req, res) => {
  * @param {Object} res - Express response object
  */
 const getReport = async (req, res) => {
-    const {
-        id
-    } = req.params;
+  const { id } = req.params;
 
-    const experiment = await Experiment.findById(id);
-    if (!experiment) {
-        return res.status(404).send("Experiment not found.");
-    }
+  const experiment = await Experiment.findById(id);
+  if (!experiment) {
+    return res.status(404).send("Experiment not found.");
+  }
 
-    const experimentId = experiment.experimentId;
-    const DatenID = generateDatenID(experimentId);
-    const reportPath = path.join("C:/Users/jonat/Desktop/ngs_dashboard/server/records", `experiment_data_${DatenID}`, "report.pdf");
-    if (!fs.existsSync(reportPath)) {
-        return res.status(404).send("Report not found.");
-    }
+  const experimentId = experiment.experimentId;
+  const DatenID = generateDatenID(experimentId);
+  const reportPath = path.join(process.env.RECORDS_PATH, `experiment_data_${DatenID}`, "report.pdf");
+  if (!fs.existsSync(reportPath)) {
+    return res.status(404).send("Report not found.");
+  }
 
-    const reportName = `report_${DatenID}.pdf`;
+  const reportName = `report_${DatenID}.pdf`;
 
+  console.log("Sending report file:", reportPath);
+  console.log("Suggested filename for client:", reportName);
 
-    console.log("Sending report file:", reportPath);
-    console.log("Suggested filename for client:", reportName);
-
-    res.download(reportPath, reportName);
+  res.download(reportPath, reportName);
 };
 
 module.exports = {
-    uploadExperiment,
-    getReport
+  uploadExperiment,
+  getReport,
 };

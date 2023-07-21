@@ -10,30 +10,11 @@ The component also handles validation (checking that all required fields are fil
 
 import React, { useState } from "react";
 import axios from "axios";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Container,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-  Typography,
-  Alert,
-  Grid,
-} from "@mui/material";
+import { CircularProgress, Container, InputLabel, OutlinedInput, Alert, Grid } from "@mui/material";
 import { DropzoneArea } from "material-ui-dropzone";
-import {
-  StyledContainer,
-  StyledFormControl,
-  StyledTypography,
-  StyledButton,
-  StyledBox,
-} from "../style/styles";
+import { StyledContainer, StyledFormControl, StyledTypography, StyledButton, StyledBox } from "../style/styles";
 import { IconButton } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
-import { Link } from "react-router-dom";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 const FileUpload: React.FC<{
   setReportUrl: React.Dispatch<React.SetStateAction<string>>;
@@ -53,10 +34,7 @@ const FileUpload: React.FC<{
   };
 
   // Function to handle changes in the file drop zones
-  const onFileChange = (
-    files: File[],
-    type: "barcodeSummary" | "ampliconSummary" | "depthFiles"
-  ) => {
+  const onFileChange = (files: File[], type: "barcodeSummary" | "ampliconSummary" | "depthFiles") => {
     switch (type) {
       case "barcodeSummary":
         setBarcodeSummary(files[0]);
@@ -75,12 +53,7 @@ const FileUpload: React.FC<{
   // Function to handle the file upload process
   const onFileUpload = async () => {
     // Validation
-    if (
-      !barcodeSummary ||
-      !ampliconSummary ||
-      depthFiles.length === 0 ||
-      !experimentId
-    ) {
+    if (!barcodeSummary || !ampliconSummary || depthFiles.length === 0 || !experimentId) {
       alert("Please select all required files and enter experiment id.");
       return;
     }
@@ -97,20 +70,13 @@ const FileUpload: React.FC<{
     });
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/upload",
-        formData
-      );
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/upload`, formData);
       setExperimentId(response.data._id);
       setReportUrl(response.data.reportUrl);
-      setSuccess(
-        "Files uploaded successfully. Simply click on the download icon to retrieve the report."
-      );
+      setSuccess("Files uploaded successfully. Simply click on the download icon to retrieve the report.");
       setReportGenerated(true);
     } catch (error) {
-      setError(
-        "An error occurred while uploading the files. Please try again."
-      );
+      setError("An error occurred while uploading the files. Please try again.");
       console.error(error);
     }
 
@@ -121,7 +87,7 @@ const FileUpload: React.FC<{
   const getReport = async () => {
     setIsLoading(true);
     try {
-      const reportUrl = `http://localhost:5000/api/${experimentId}/report`;
+      const reportUrl = `${import.meta.env.VITE_API_URL}/${experimentId}/report`;
       const response = await axios.get(reportUrl, { responseType: "blob" });
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
@@ -137,26 +103,17 @@ const FileUpload: React.FC<{
   };
 
   return (
-    <Container maxWidth="md" sx={{ marginTop: "2rem", marginBottom: "2rem" }}>
-      <Grid container justifyContent="center" alignItems="center" spacing={3}>
-        <Link to="/zip-upload">
-          <StyledButton variant="contained" color="primary">
-            Upload ZIP File <ArrowForwardIosIcon fontSize="inherit" />
-          </StyledButton>
-        </Link>
+    <Container maxWidth="md" sx={{ marginTop: "3rem", marginBottom: "2rem" }}>
+      <Grid container justifyContent="center" alignItems="center" spacing={1}>
+        <StyledTypography variant="h6" align="center">
+          Generate a Report From Uploading Individual Files
+        </StyledTypography>
         <StyledContainer maxWidth="md">
-          <StyledFormControl
-            fullWidth
-            variant="outlined"
-            sx={{ marginBottom: "1rem" }}
-          >
-            <InputLabel htmlFor="experimentId">Experiment ID</InputLabel>
-            <OutlinedInput
-              id="experimentId"
-              value={experimentId}
-              onChange={onExperimentIdChange}
-              label="Experiment ID"
-            />
+          <StyledFormControl fullWidth variant="outlined" sx={{ marginBottom: "1rem" }}>
+            <InputLabel htmlFor="experimentId" color="primary">
+              Experiment ID
+            </InputLabel>
+            <OutlinedInput id="experimentId" value={experimentId} onChange={onExperimentIdChange} label="Experiment ID" />
           </StyledFormControl>
 
           <Grid container spacing={3}>
@@ -167,11 +124,7 @@ const FileUpload: React.FC<{
               <DropzoneArea
                 acceptedFiles={[".xls"]}
                 filesLimit={1}
-                dropzoneText={
-                  <span style={{ fontSize: "18px", color: "#C2C2C2" }}>
-                    Upload your Barcode Summary file (.xls) here
-                  </span>
-                }
+                dropzoneText={<span style={{ fontSize: "18px", color: "#C2C2C2" }}>Upload your Barcode Summary file (.xls) here</span>}
                 showPreviewsInDropzone={true}
                 useChipsForPreview={true}
                 previewGridProps={{
@@ -188,11 +141,7 @@ const FileUpload: React.FC<{
               <DropzoneArea
                 acceptedFiles={[".xls"]}
                 filesLimit={1}
-                dropzoneText={
-                  <span style={{ fontSize: "18px", color: "#C2C2C2" }}>
-                    Upload your Amplicon Summary file (.xls) here
-                  </span>
-                }
+                dropzoneText={<span style={{ fontSize: "18px", color: "#C2C2C2" }}>Upload your Amplicon Summary file (.xls) here</span>}
                 showPreviewsInDropzone={true}
                 useChipsForPreview={true}
                 previewGridProps={{
@@ -208,11 +157,7 @@ const FileUpload: React.FC<{
               </StyledTypography>
               <DropzoneArea
                 acceptedFiles={[".xls"]}
-                dropzoneText={
-                  <span style={{ fontSize: "18px", color: "#C2C2C2" }}>
-                    Upload Depth Files here
-                  </span>
-                }
+                dropzoneText={<span style={{ fontSize: "18px", color: "#C2C2C2" }}>Upload Depth Files here</span>}
                 showPreviewsInDropzone={true}
                 useChipsForPreview={true}
                 previewGridProps={{
@@ -224,34 +169,13 @@ const FileUpload: React.FC<{
             </Grid>
 
             <Grid item xs={12}>
-              <StyledBox
-                sx={{ display: "flex", justifyContent: "center", gap: "1rem" }}
-              >
-                <StyledButton
-                  variant="contained"
-                  onClick={onFileUpload}
-                  disabled={
-                    isLoading ||
-                    !barcodeSummary ||
-                    !ampliconSummary ||
-                    depthFiles.length === 0 ||
-                    experimentId.trim().length === 0
-                  }
-                >
-                  {isLoading ? (
-                    <CircularProgress size={24} />
-                  ) : (
-                    "Generate Report"
-                  )}
+              <StyledBox sx={{ display: "flex", justifyContent: "center", gap: "1rem" }}>
+                <StyledButton variant="contained" onClick={onFileUpload} disabled={isLoading || !barcodeSummary || !ampliconSummary || depthFiles.length === 0 || experimentId.trim().length === 0}>
+                  {isLoading ? <CircularProgress size={24} /> : "Generate Report"}
                 </StyledButton>
 
                 {reportGenerated && (
-                  <IconButton
-                    aria-label="download report"
-                    color="success"
-                    onClick={getReport}
-                    disabled={!experimentId || isLoading}
-                  >
+                  <IconButton aria-label="download report" color="success" onClick={getReport} disabled={!experimentId || isLoading}>
                     <DownloadIcon />
                   </IconButton>
                 )}

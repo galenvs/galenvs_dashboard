@@ -1,3 +1,8 @@
+/**
+ * Generates a unique date-based ID for an experiment data entry.
+ * Output format: DDMMYY_HHMM_experimentId
+ */
+
 function generateDatenID(experimentId) {
     const currentDate = new Date();
     const day = String(currentDate.getDate()).padStart(2, "0");

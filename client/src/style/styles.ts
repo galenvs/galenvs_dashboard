@@ -1,4 +1,4 @@
-import { Box, Button, Container, FormControl, Typography } from '@mui/material';
+import { Box, Button, Container, FormControl, Typography , IconButton, ListItemText , TextField  } from '@mui/material';
 import { styled } from '@mui/system';
 import { grey, lightBlue, red } from '@mui/material/colors';
 
@@ -49,3 +49,79 @@ export const StyledBox = styled(Box)({
   gap: '0.5rem',
   marginTop: '0.5rem',
 });
+
+export const recordsStyles = {
+  container: {
+      fontFamily: 'Arial, sans-serif',
+      margin: '0 auto',
+      maxWidth: '600px',
+      padding: '0 20px',
+  },
+  button: {
+      backgroundColor: '#4CAF50',
+      border: 'none',
+      color: 'white',
+      padding: '10px 24px',
+      textAlign: 'center',
+      textDecoration: 'none',
+      display: 'inline-block',
+      fontSize: '16px',
+      margin: '4px 2px',
+      cursor: 'pointer',
+  },
+  list: {
+      listStyleType: 'none',
+      padding: 0,
+  },
+  listItem: {
+      marginBottom: '10px',
+  },
+};
+export const DirectoryItem = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  cursor: 'pointer',
+  border: '1px solid #ddd',
+  borderRadius: '5px',
+  padding: '5px',
+  width: '100%',
+  transition: 'background-color 0.3s ease',
+  '&:hover': {
+      backgroundColor: '#eee',
+  },
+  '& .MuiIconButton-root': {
+      marginRight: theme.spacing(1),
+  },
+}));
+
+
+export const StyledTextField = styled(TextField)({
+  width: '400px', // Adjust the width as needed
+  '& .MuiOutlinedInput-root': {
+    borderRadius: 30,
+    height: '35px', // Adjust the height as needed
+    '& fieldset': {
+      borderRadius: 30,
+    },
+    '& input': {
+      padding: '10px 14px',
+    },
+  },
+  '& label.Mui-focused': {
+    color: '#8a1538',
+  },
+  '& .MuiOutlinedInput-input': {
+    color: '#8a1538',
+  },
+  '& .MuiInputLabel-root': {
+    color: '#8a1538',
+  },
+  '& .MuiInputLabel-formControl': {
+    top: '-10px', // Adjust this to vertically center the label
+  },
+  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+    borderColor: '#8a1538',
+  },
+});
+
+

@@ -19,17 +19,11 @@ const {
 } = require('../utilities');
 
 
-/**
- * @desc Uploads a zip file, extracts and processes the files, saves the experiment data, and generates a report
- * @param {Object} req - Express request object, expected to contain the following form fields: experimentId and experimentZip
- * @param {Object} res - Express response object
- * @returns {Object} - Returns the id of the saved experiment
- */
 const uploadZip = async (req, res) => {
     const zipFilePath = req.file.path;
     const experimentId = req.body.experimentId;
     const DatenID = generateDatenID(experimentId);
-    const destinationPath = path.resolve("C:/Users/jonat/Desktop/ngs_dashboard/server/records", `experiment_data_${DatenID}`);
+    const destinationPath = path.resolve(process.env.RECORDS_PATH, `experiment_data_${DatenID}`);
     console.log(`experimentId: ${experimentId}`);
     console.log(`Zip file path: ${zipFilePath}`);
     console.log(`Destination path: ${destinationPath}`);
@@ -78,12 +72,12 @@ const uploadZip = async (req, res) => {
         const ampliconSummary = filesInRoot.find(file => file.endsWith("bcmatrix.xls"));
 
         // construct paths
-        const recordPath = path.join("C:/Users/jonat/Desktop/ngs_dashboard/server/records", `experiment_data_${DatenID}`);
+        const recordPath = path.join(process.env.RECORDS_PATH, `experiment_data_${DatenID}`);
         const depthFolderPath = path.join(recordPath, `depth_${DatenID}`, '/');
         const barcodeSummaryPath = path.join(destinationPath, barcodeSummary);
         const ampliconSummaryPath = path.join(destinationPath, ampliconSummary);
-        const rMarkdownPath = path.join(__dirname, "..", "core", "pgx_qc.Rmd");
-        const reportPath = path.join("C:/Users/jonat/Desktop/ngs_dashboard/server/records", `experiment_data_${DatenID}`, "report.pdf");
+        const rMarkdownPath = path.join(process.env.CORE_PATH, "pgx_qc.Rmd");
+        const reportPath = path.join(process.env.RECORDS_PATH, `experiment_data_${DatenID}`, "report.pdf");
 
         // Execute R markdown
         console.log(barcodeSummaryPath);
@@ -118,11 +112,6 @@ const uploadZip = async (req, res) => {
     }
 };
 
-/**
- * @desc Sends a report file for a specific zip file
- * @param {Object} req - Express request object, expected to contain the id of a zip file as a parameter
- * @param {Object} res - Express response object
- */
 
 const getZipReport = async (req, res) => {
     const {
@@ -136,7 +125,7 @@ const getZipReport = async (req, res) => {
 
     const experimentId = experiment.experimentId;
     const DatenID = generateDatenID(experimentId);
-    const reportPath = path.join("C:/Users/jonat/Desktop/ngs_dashboard/server/records", `experiment_data_${DatenID}`, "report.pdf");
+    const reportPath = path.join(process.env.RECORDS_PATH, `experiment_data_${DatenID}`, "report.pdf");
     if (!fs.existsSync(reportPath)) {
         return res.status(404).send("Report not found.");
     }

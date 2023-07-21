@@ -9,25 +9,11 @@ The component also handles validation (checking that all required fields are fil
 */
 
 import React, { useState } from "react";
-import {
-  IconButton,
-  TextField,
-  CircularProgress,
-  Alert,
-  Container,
-} from "@mui/material";
+import { IconButton, TextField, CircularProgress, Alert, Container } from "@mui/material";
 import { DropzoneArea } from "material-ui-dropzone";
-import {
-  StyledContainer,
-  StyledFormControl,
-  StyledTypography,
-  StyledButton,
-  StyledBox,
-} from "../style/styles";
+import { StyledContainer, StyledTypography, StyledButton, StyledBox } from "../style/styles";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import DownloadIcon from "@mui/icons-material/GetApp";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 const ZipUpload: React.FC<{
   setReportUrl: React.Dispatch<React.SetStateAction<string>>;
@@ -62,20 +48,13 @@ const ZipUpload: React.FC<{
     formData.append("experimentId", experimentId);
     formData.append("experimentZip", selectedFile, selectedFile.name);
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/zip-upload",
-        formData
-      );
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/zip-upload`, formData);
       setExperimentId(response.data._id);
       setReportUrl(response.data.reportUrl);
-      setSuccess(
-        "Files uploaded successfully. Please click on the download icon to retrieve the report."
-      );
+      setSuccess("Files uploaded successfully. Please click on the download icon to retrieve the report.");
       setReportGenerated(true);
     } catch (error) {
-      setError(
-        "An error occurred while uploading the files. Please try again."
-      );
+      setError("An error occurred while uploading the files. Please try again.");
       console.error(error);
     }
 
@@ -86,7 +65,7 @@ const ZipUpload: React.FC<{
   const getReport = async () => {
     setIsLoading(true);
     try {
-      const reportUrl = `http://localhost:5000/api/zip/${experimentId}/report`;
+      const reportUrl = `${import.meta.env.VITE_API_URL}/zip/${experimentId}/report`;
       const response = await axios.get(reportUrl, { responseType: "blob" });
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
@@ -103,64 +82,22 @@ const ZipUpload: React.FC<{
 
   return (
     <Container maxWidth="md" sx={{ marginTop: "2rem", marginBottom: "2rem" }}>
-      <StyledBox>
-        <Link to="/">
-          <StyledButton variant="contained">
-            <ArrowBackIosIcon fontSize="inherit" /> Back{" "}
-          </StyledButton>
-        </Link>
-      </StyledBox>
       <StyledContainer>
         <StyledTypography variant="h6" align="center">
           Generate a Report From the Experiment Zip File
         </StyledTypography>
 
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          id="experimentId"
-          value={experimentId}
-          label="Experiment ID"
-          name="experimentId"
-          autoComplete="experimentId"
-          autoFocus
-          onChange={onExperimentIdChange}
-        />
+        <TextField margin="normal" required fullWidth id="experimentId" value={experimentId} label="Experiment ID" name="experimentId" autoComplete="experimentId" color="primary" autoFocus onChange={onExperimentIdChange} />
 
-        <DropzoneArea
-          onChange={onFileChange}
-          acceptedFiles={[
-            "application/zip",
-            "application/x-zip-compressed",
-            "multipart/x-zip",
-            "application/octet-stream",
-          ]}
-          maxFileSize={500000000}
-          showPreviewsInDropzone={true}
-          useChipsForPreview={true}
-          previewGridProps={{ container: { spacing: 1, direction: "row" } }}
-          filesLimit={1}
-          dropzoneText={
-            <span style={{ fontSize: "18px", color: "#C2C2C2" }}>
-              Upload a Zip File of the experiment here Summary file here
-            </span>
-          }
-        />
+        <DropzoneArea onChange={onFileChange} acceptedFiles={["application/zip", "application/x-zip-compressed", "multipart/x-zip", "application/octet-stream"]} maxFileSize={500000000} showPreviewsInDropzone={true} useChipsForPreview={true} previewGridProps={{ container: { spacing: 1, direction: "row" } }} filesLimit={1} dropzoneText={<span style={{ fontSize: "18px", color: "#C2C2C2" }}>Upload a Zip File of the experiment here Summary file here</span>} />
 
-        <StyledBox
-          sx={{ display: "flex", justifyContent: "center", gap: "1rem" }}
-        >
+        <StyledBox sx={{ display: "flex", justifyContent: "center", gap: "1rem" }}>
           <StyledButton
             variant="contained"
             onClick={onFileUpload}
             disabled={!selectedFile || !experimentId || isLoading} // disable button when no file or experiment ID or loading
           >
-            {isLoading ? (
-              <CircularProgress size={24} />
-            ) : (
-              "Upload ZIP File & Generate Report"
-            )}
+            {isLoading ? <CircularProgress size={24} /> : "Upload ZIP File & Generate Report"}
           </StyledButton>
 
           {reportGenerated && (
