@@ -16,14 +16,28 @@ The project is built using the MERN stack with TypeScript. The report generation
 ## Setup and Installation
 To set up and install the NGS Dashboard on your local machine, follow these steps:
 
-1. Clone the repository: `git clone <https://github.com/jonathan-githubofficial/ngs_dashboard>`.
-2. Navigate into the project directory: `cd ngs-dashboard`.
-3. Install the dependencies:
+1. Install [Node.js](https://nodejs.org/) and [R](https://www.r-project.org/) on your machine. These are essential to run the application and generate the reports.
+
+2. Clone the repository: `git clone https://github.com/jonathan-githubofficial/ngs_dashboard`.
+
+3. Navigate into the project directory: `cd ngs-dashboard`.
+
+4. Install the dependencies:
    - For the server, navigate into the server directory (`cd server`) and run `npm install`.
    - For the client, navigate into the client directory (`cd client`) and run `npm install`.
-   - Note: If you encounter any issues installing Material-UI in the client, try installing the packages individually with `npm install @material-ui/core` and `npm install @material-ui/icons`.
-4. Create a `.env` file in the server directory and fill it with your environment variables.
-5. Start the server by running `npm run dev` in the server directory.
-6. In a separate terminal, start the client by running `npm run dev -- --host` in the client directory.
+
+   Note: If you encounter any issues installing Material-UI, try installing the packages individually with `npm install @material-ui/core` and `npm install @material-ui/icons`.
+
+5. To install the necessary R packages and libraries for R Markdown, open R in the terminal by running the command `R`, then run the following command::
+   - `install.packages(c("rmarkdown", "knitr", "tidyverse", "ggpubr", "kableExtra", "scales", "viridis", "xtable", "purrr", "gplots", "formatR"))`
+
+6. Create a `.env` file in the server directory and fill it with your environment variables.
+
+7. Start the server by running `npm run dev` in the server directory.
+
+8. In a separate terminal, start the client by running `npm run dev -- --host` in the client directory.
+
+---
+
 
 
