@@ -5,6 +5,7 @@ const cors = require('cors');
 const experimentRoutes = require('./routes/Experiment-Routes');
 const zipUploadRoutes = require('./routes/ZipUpload-Routes');
 const recordsRoutes = require('./routes/Record-Routes');
+const filterRoutes = require('./routes/Filter-Routes');
 require('dotenv').config();
 const app = express();
 
@@ -28,5 +29,6 @@ app.use('/records', express.static('records'));
 app.use('/api', experimentRoutes);
 app.use('/api', zipUploadRoutes);
 app.use('/api/records', recordsRoutes);
+app.use('/api/filter', filterRoutes);
 
 app.listen(process.env.PORT || 5000, () => console.log(`Server is running on port ${process.env.PORT || 5000}`));

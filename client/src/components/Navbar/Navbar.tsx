@@ -40,9 +40,11 @@ const Navbar: React.FC = () => {
                 Records
               </Button>
             </Link>
-            <Button variant="outlined" size="small" sx={{ borderRadius: 25, padding: "5px 15px", color: "#8a1538", borderColor: "#8a1538" }}>
-              Button 4
-            </Button>
+            <Link to="/pgxResults">
+              <Button variant="outlined" size="small" sx={{ borderRadius: 25, padding: "5px 15px", color: "#8a1538", borderColor: "#8a1538" }}>
+               Filter
+              </Button>
+            </Link>
           </Box>
         </Box>
       </Toolbar>
