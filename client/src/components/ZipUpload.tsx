@@ -9,7 +9,7 @@ The component also handles validation (checking that all required fields are fil
 */
 
 import React, { useState } from "react";
-import { IconButton, TextField, CircularProgress, Alert, Container } from "@mui/material";
+import { IconButton, TextField, CircularProgress, Alert, Container, Tooltip } from "@mui/material";
 import { DropzoneArea } from "material-ui-dropzone";
 import { StyledContainer, StyledTypography, StyledButton, StyledBox } from "../style/styles";
 import axios from "axios";
@@ -101,11 +101,13 @@ const ZipUpload: React.FC<{
           </StyledButton>
 
           {reportGenerated && (
+            <Tooltip title="Download processed file">
             <StyledBox>
               <IconButton color="success" onClick={getReport}>
                 <DownloadIcon />
               </IconButton>
             </StyledBox>
+            </Tooltip>
           )}
         </StyledBox>
 

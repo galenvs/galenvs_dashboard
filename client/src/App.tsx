@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import FileUpload from './components/FileUpload';
 import ZipUpload from './components/ZipUpload'; 
 import Records from './components/Records'; 
-import PgxResultFilter from "./components/PgxResultFilter";
+import TableFilter from "./components/TableFilter";
 import Navbar from './components/Navbar/Navbar';
 import React, { useState } from 'react';
 
@@ -17,7 +17,7 @@ const App: React.FC = () => {
                     <Route path="/" element={<ZipUpload setReportUrl={setReportUrl} />} /> 
                     <Route path="/fileUpload" element={<FileUpload setReportUrl={setReportUrl} />} />
                     <Route path="/records" element={<Records />} />
-                    <Route path="/pgxResults" element={<PgxResultFilter />} />
+                    <Route path="/tableFilter" element={<TableFilter />} />
                 </Routes>
             </div>
         </Router>

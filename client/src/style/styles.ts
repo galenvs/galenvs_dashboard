@@ -1,4 +1,4 @@
-import { Box, Button, Container, FormControl, Typography , IconButton, ListItemText , TextField  } from '@mui/material';
+import { Box, Button, Container, FormControl, Typography , IconButton, ListItemText , TextField , Select } from '@mui/material';
 import { styled } from '@mui/system';
 import { grey, lightBlue, red } from '@mui/material/colors';
 
@@ -125,3 +125,11 @@ export const StyledTextField = styled(TextField)({
 });
 
 
+export const StyledSelect = styled(Select)`
+  margin-bottom: 1rem;
+  border-radius: 50px;
+  width: 200px;
+  & .MuiSelect-select {
+    padding-right: 32px;
+  }
+`;

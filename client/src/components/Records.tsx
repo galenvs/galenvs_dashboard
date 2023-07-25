@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { List, ListItem, ListItemText, IconButton, Grid, Container, ListItemSecondaryAction, Dialog, DialogActions, DialogTitle, Button, CircularProgress, Typography } from "@material-ui/core";
+import { List, ListItem, ListItemText, IconButton, Grid, Container, ListItemSecondaryAction, Dialog, DialogActions, DialogTitle, Button, CircularProgress, Typography ,Box } from "@material-ui/core";
 import { CloudDownloadOutlined, Delete, FolderOpen } from "@material-ui/icons";
 import { Alert } from "@mui/material";
 import { StyledTypography, DirectoryItem, StyledTextField } from "../style/styles";
@@ -8,89 +8,99 @@ import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import SimCardDownloadOutlinedIcon from "@mui/icons-material/SimCardDownloadOutlined";
 import KeyboardArrowLeftOutlinedIcon from "@mui/icons-material/KeyboardArrowLeftOutlined";
 
-const Records = () => {
-    const [items, setItems] = useState([]);
-    const [filteredItems, setFilteredItems] = useState([]);
-    const [currentPath, setCurrentPath] = useState("");
-    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-    const [fileToDelete, setFileToDelete] = useState(null);
-    const [searchQuery, setSearchQuery] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [alert, setAlert] = useState({ open: false, message: "", severity: "success" });
-  
-    useEffect(() => {
-      fetchItems();
-    }, [currentPath]);
-  
-    useEffect(() => {
-      if (searchQuery === "") {
-        setFilteredItems(items);
-      } else {
-        setFilteredItems(items.filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase())));
-      }
-    }, [items, searchQuery]);
-  
-    const handleError = (error) => {
-      console.error(error);
-      setError(error.toString());
-      setIsLoading(false);
-    };
-  
-    const fetchItems = () => {
-      setIsLoading(true);
-      axios.get(`${import.meta.env.VITE_API_URL}/records/${currentPath}`)
-        .then((response) => {
-          setIsLoading(false);
-          setItems(response.data);
-        })
-        .catch(handleError);
-    };
-  
-    const navigateToDirectory = (dir) => {
-      setCurrentPath((currentPath) => (currentPath ? `${currentPath}/${dir}` : dir));
-    };
-  
-    const navigateUp = () => {
-      setCurrentPath((path) => {
-        const pathParts = path.split("/");
-        pathParts.pop();
-        return pathParts.join("/");
+interface Item {
+  name: string;
+  type: string;
+}
+
+const Records: React.FC = () => {
+  const [items, setItems] = useState<Item[]>([]);
+  const [filteredItems, setFilteredItems] = useState<Item[]>([]);
+  const [currentPath, setCurrentPath] = useState<string>("");
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
+  const [fileToDelete, setFileToDelete] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [alert, setAlert] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "error" | "info" | "warning";
+  }>({ open: false, message: "", severity: "success" });
+
+  useEffect(() => {
+    fetchItems();
+  }, [currentPath]);
+
+  useEffect(() => {
+    if (searchQuery === "") {
+      setFilteredItems(items);
+    } else {
+      setFilteredItems(items.filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase())));
+    }
+  }, [items, searchQuery]);
+
+  const handleError = (error: any) => {
+    console.error(error);
+    setError(error.toString());
+    setIsLoading(false);
+  };
+
+  const fetchItems = () => {
+    setIsLoading(true);
+    axios
+      .get<Item[]>(`${import.meta.env.VITE_API_URL}/records/${currentPath}`)
+      .then((response) => {
+        setIsLoading(false);
+        setItems(response.data);
+      })
+      .catch(handleError);
+  };
+
+  const navigateToDirectory = (dir: string) => {
+    setCurrentPath((currentPath) => (currentPath ? `${currentPath}/${dir}` : dir));
+  };
+
+  const navigateUp = () => {
+    setCurrentPath((path) => {
+      const pathParts = path.split("/");
+      pathParts.pop();
+      return pathParts.join("/");
+    });
+  };
+
+  const downloadFile = (filePath: string) => {
+    window.open(`${import.meta.env.VITE_API_URL}/records/download/${currentPath}/${filePath}`);
+  };
+
+  const downloadFolder = (folderPath: string) => {
+    window.open(`${import.meta.env.VITE_API_URL}/records/downloadFolder/${currentPath}/${folderPath}`);
+  };
+
+  const openDeleteDialog = (filePath: string) => {
+    setFileToDelete(filePath);
+    setDeleteDialogOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+  };
+
+  const deleteFile = () => {
+    setIsLoading(true);
+    axios
+      .delete(`${import.meta.env.VITE_API_URL}/records/delete/${currentPath}/${fileToDelete}`)
+      .then(() => {
+        setIsLoading(false);
+        fetchItems(); // Refresh the file list after deletion
+        closeDeleteDialog();
+        setAlert({ open: true, message: "File deleted successfully.", severity: "success" });
+      })
+      .catch((error) => {
+        handleError(error);
+        setAlert({ open: true, message: "Failed to delete file.", severity: "error" });
       });
-    };
-  
-    const downloadFile = (filePath) => {
-      window.open(`${import.meta.env.VITE_API_URL}/records/download/${currentPath}/${filePath}`);
-    };
-  
-    const downloadFolder = (folderPath) => {
-      window.open(`${import.meta.env.VITE_API_URL}/records/downloadFolder/${currentPath}/${folderPath}`);
-    };
-  
-    const openDeleteDialog = (filePath) => {
-      setFileToDelete(filePath);
-      setDeleteDialogOpen(true);
-    };
-  
-    const closeDeleteDialog = () => {
-      setDeleteDialogOpen(false);
-    };
-  
-    const deleteFile = () => {
-      setIsLoading(true);
-      axios
-        .delete(`${import.meta.env.VITE_API_URL}/records/delete/${currentPath}/${fileToDelete}`)
-        .then(() => {
-          setIsLoading(false);
-          fetchItems(); // Refresh the file list after deletion
-          closeDeleteDialog();
-          setAlert({ open: true, message: "File deleted successfully.", severity: "success" });
-        })
-        .catch((error) => {
-          handleError(error);
-          setAlert({ open: true, message: "Failed to delete file.", severity: "error" });
-        });
-    };
+  };
 
   return (
     <Container>
@@ -196,6 +206,20 @@ const Records = () => {
             ))}
           </List>
         </Grid>
+        
+        {!isLoading && filteredItems.length === 0 && (
+  <Box
+    display="flex"
+    justifyContent="center"
+    alignItems="center"
+    flexDirection="column"
+    style={{ height: "50vh" }}
+  >
+    <Typography variant="h6" color="textSecondary">
+      The folder is empty
+    </Typography>
+  </Box>
+)}
       </Grid>
     </Container>
   );

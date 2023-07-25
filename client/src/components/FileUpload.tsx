@@ -10,7 +10,7 @@ The component also handles validation (checking that all required fields are fil
 
 import React, { useState } from "react";
 import axios from "axios";
-import { CircularProgress, Container, InputLabel, OutlinedInput, Alert, Grid } from "@mui/material";
+import { CircularProgress, Container, InputLabel, OutlinedInput, Alert, Grid , Tooltip } from "@mui/material";
 import { DropzoneArea } from "material-ui-dropzone";
 import { StyledContainer, StyledFormControl, StyledTypography, StyledButton, StyledBox } from "../style/styles";
 import { IconButton } from "@mui/material";
@@ -175,9 +175,11 @@ const FileUpload: React.FC<{
                 </StyledButton>
 
                 {reportGenerated && (
+                  <Tooltip title="Download processed file">
                   <IconButton aria-label="download report" color="success" onClick={getReport} disabled={!experimentId || isLoading}>
                     <DownloadIcon />
                   </IconButton>
+                  </Tooltip>
                 )}
               </StyledBox>
 
