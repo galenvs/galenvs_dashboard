@@ -1,7 +1,10 @@
 # NGS Dashboard
 
 ## Project Description
-NGS Dashboard is a web application that provides an intuitive interface for users to upload IonCode experiment results files or ZIP files. Once uploaded, the dashboard generates a comprehensive report detailing Amplicon Coverage, Base Depth, and Uniformity.
+NGS Dashboard is a web application that provides an intuitive interface for users to do the following :
+- Upload IonCode experiment results in multiple formats. Once uploaded, the dashboard automatically generates comprehensive reports, encompassing essential metrics such as Amplicon Coverage, Base Depth, and Uniformity.
+- Seamlessly access and manage your generated reports, ensuring you have full control over your NGS data analysis workflow.
+- Efficiently filter CNV and SNP sample results, preparing them for easy and insightful customer viewing and analysis.
 
 ## Tech Stack
 The project is built using the MERN stack with TypeScript. The report generation is accomplished using R Markdown. Here's a brief overview of the tech stack:
