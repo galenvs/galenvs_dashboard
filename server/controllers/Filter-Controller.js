@@ -148,16 +148,6 @@ const filterCNV = async (req, res) => {
   }
 };
 
-
-
-
-
-
-
-
-
-
-
 const filterCNVZip = async (req, res) => {
   const zipFilePath = req.file.path;
   const destinationPath = path.join(process.env.UPLOADS_PATH, path.basename(zipFilePath, ".zip"));
@@ -184,10 +174,10 @@ const filterCNVZip = async (req, res) => {
 
     async function processDirectory(dirPath) {
       const entries = fs.readdirSync(dirPath);
-      
+
       for (const entry of entries) {
         const entryPath = path.join(dirPath, entry);
-    
+
         try {
           if (fs.statSync(entryPath).isDirectory()) {
             // If the directory is named 'Variants', look for .tsv files within its subdirectories
@@ -206,33 +196,34 @@ const filterCNVZip = async (req, res) => {
                       const newPath = path.join(allTsvDir, file);
                       console.log(`Moving .tsv file: ${oldPath} to ${newPath}`);
                       fs.renameSync(oldPath, newPath);
-                  
+
                       // Read the .tsv file and add its data to the combinedData array
-                      const tsvData = fs.readFileSync(newPath, 'utf-8');
-                      const rows = tsvData.split('\n');
-                      const headers = rows[2].split('\t');
+                      const tsvData = fs.readFileSync(newPath, "utf-8");
+                      const rows = tsvData.split("\n");
+                      const headers = rows[2].split("\t");
                       for (let i = 3; i < rows.length; i++) {
                         const rowData = {};
-                        const cells = rows[i].split('\t');
+                        const cells = rows[i].split("\t");
                         let typeIndex = headers.indexOf("type");
-                        if (cells[typeIndex] === "CNV") {  // Only include rows with "CNV" in the "type" column
-                          let indicesToInclude = ["# locus", "type", "iscn", "gene"].map(header => headers.indexOf(header));
+                        if (cells[typeIndex] === "CNV") {
+                          // Only include rows with "CNV" in the "type" column
+                          let indicesToInclude = ["# locus", "type", "iscn", "gene"].map((header) => headers.indexOf(header));
                           for (let j = 0; j < headers.length; j++) {
-                            if (indicesToInclude.includes(j)) {  // Only include specific columns in rowData
+                            if (indicesToInclude.includes(j)) {
+                              // Only include specific columns in rowData
                               let cellData = cells[j];
-                              if (typeof cellData === 'string' && cellData.length > 32767) {
+                              if (typeof cellData === "string" && cellData.length > 32767) {
                                 cellData = cellData.substring(0, 32767);
                               }
                               rowData[headers[j]] = cellData;
                             }
                           }
-                          rowData['SourceFile'] = file;
+                          rowData["SourceFile"] = file;
                           combinedData.push(rowData);
                         }
                       }
                     }
                   }
-                  
                 }
               }
             } else {
@@ -264,19 +255,19 @@ const filterCNVZip = async (req, res) => {
     // Start processing from the root of the extracted content
     await processDirectory(destinationPath);
 
-// Combine all .tsv data into one .xlsx file
-const combinedFileName = path.basename(destinationPath) + ".xlsx";
-const combinedFilePath = path.join(path.dirname(destinationPath), combinedFileName);
-const newWB = XLSX.utils.book_new();
-const newWS = XLSX.utils.json_to_sheet(combinedData);
-XLSX.utils.book_append_sheet(newWB, newWS, "CombinedData");
-XLSX.writeFile(newWB, combinedFilePath);
+    // Combine all .tsv data into one .xlsx file
+    const combinedFileName = path.basename(destinationPath) + ".xlsx";
+    const combinedFilePath = path.join(path.dirname(destinationPath), combinedFileName);
+    const newWB = XLSX.utils.book_new();
+    const newWS = XLSX.utils.json_to_sheet(combinedData);
+    XLSX.utils.book_append_sheet(newWB, newWS, "CombinedData");
+    XLSX.writeFile(newWB, combinedFilePath);
     // Delete the destination directory
-fs.rmdirSync(destinationPath, { recursive: true });
-console.log(`Deleted directory: ${destinationPath}`);
+    fs.rmdirSync(destinationPath, { recursive: true });
+    console.log(`Deleted directory: ${destinationPath}`);
 
     console.log(`path:  ${combinedFilePath}`);
-    res.json({ message: "Zip file processed successfully", filename: combinedFileName});
+    res.json({ message: "Zip file processed successfully", filename: combinedFileName });
     console.log(`filenameForClient:  ${combinedFileName}`);
   } catch (err) {
     console.error("Failed to extract and process zip file", err);
@@ -285,15 +276,6 @@ console.log(`Deleted directory: ${destinationPath}`);
     });
   }
 };
-
-
-
-
-
-
-
-
-
 
 const download = (req, res) => {
   const filename = req.params.filename;
