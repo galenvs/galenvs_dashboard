@@ -31,7 +31,8 @@ To set up and install the NGS Dashboard on your local machine, follow these step
 5. To install the necessary R packages and libraries for R Markdown, open R in the terminal by running the command `R`, then run the following command::
    - `install.packages(c("rmarkdown", "knitr", "tidyverse", "ggpubr", "kableExtra", "scales", "viridis", "xtable", "purrr", "gplots", "formatR"))`
 
-6. Create a `.env` file in the server directory and fill it with your environment variables.
+6. Update the `.env` file in the server and the client directory and fill it with your environment variables.
+
 
 7. Start the server by running `npm run dev` in the server directory.
 
