@@ -14,11 +14,38 @@ const storage = multer.diskStorage({
   },
 });
 
+// Initialize multer middleware with the custom storage
 const upload = multer({ storage: storage });
 
+/**
+ * @desc Route for filtering SNP data
+ * @route POST /api/filter/filter-snp
+ * @middleware multer.single("file")
+ * @access Public
+ */
 router.post("/filter-snp", upload.single("file"), filterController.filterSNP);
+
+/**
+ * @desc Route for filtering CNV data
+ * @route POST /api/filter/filter-cnv
+ * @middleware multer.single("file")
+ * @access Public
+ */
 router.post("/filter-cnv", upload.single("file"), filterController.filterCNV);
+
+/**
+ * @desc Route for filtering CNV data contained in a zip file
+ * @route POST /api/filter/filter-cnv-zip
+ * @middleware multer.single("file")
+ * @access Public
+ */
 router.post("/filter-cnv-zip", upload.single("file"), filterController.filterCNVZip);
+
+/**
+ * @desc Route for downloading filtered data by filename
+ * @route GET /api/filter/download/:filename
+ * @access Public
+ */
 router.get("/download/:filename", filterController.download);
 
 module.exports = router;
