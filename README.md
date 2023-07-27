@@ -32,11 +32,13 @@ To set up and install the NGS Dashboard on your local machine, follow these step
    - `install.packages(c("rmarkdown", "knitr", "tidyverse", "ggpubr", "kableExtra", "scales", "viridis", "xtable", "purrr", "gplots", "formatR"))`
 
 6. Update the `.env` file in the server and the client directory and fill it with your environment variables.
+   
+   Note : You also need to update this line `knitr::opts_knit$set(root.dir = "/home/testvm/ngs_dashboard/server/records/") ` inside of the 
+`pgx_qc.Rmd` code with the right directory of the records folder in the server directory. 
 
+8. Start the server by running `npm run dev` in the server directory.
 
-7. Start the server by running `npm run dev` in the server directory.
-
-8. In a separate terminal, start the client by running `npm run dev -- --host` in the client directory.
+9. In a separate terminal, start the client by running `npm run dev -- --host` in the client directory.
 
 ---
 
