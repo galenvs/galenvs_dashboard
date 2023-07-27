@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import FileUpload from './components/FileUpload';
-import ZipUpload from './components/ZipUpload'; 
-import Records from './components/Records'; 
-import TableFilter from "./components/TableFilter";
+
+import Records from './pages/Records'; 
+import TableFilter from "./pages/TableFilter";
 import Navbar from './components/Navbar/Navbar';
+import ReportGenrator from './pages/ReportGenrator'
 import React, { useState } from 'react';
 
 const App: React.FC = () => {
@@ -14,10 +14,9 @@ const App: React.FC = () => {
             <div className="app">
                 <Navbar />
                 <Routes>
-                    <Route path="/" element={<ZipUpload setReportUrl={setReportUrl} />} /> 
-                    <Route path="/fileUpload" element={<FileUpload setReportUrl={setReportUrl} />} />
                     <Route path="/records" element={<Records />} />
                     <Route path="/tableFilter" element={<TableFilter />} />
+                    <Route path="/" element={<ReportGenrator />} />
                 </Routes>
             </div>
         </Router>

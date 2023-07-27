@@ -77,8 +77,7 @@ const Navbar: React.FC = () => {
   };
 
   const headersData = [
-    { label: 'Zip Upload', href: '/', icon: <FolderZipIcon /> },
-    { label: 'File Upload', href: '/fileUpload', icon: <UploadFileIcon /> },
+    { label: 'Report Generator', href: '/', icon: <UploadFileIcon /> },
     { label: 'Records', href: '/records', icon: <ListIcon /> },
     { label: 'Filter', href: '/tableFilter', icon: <FilterListIcon /> },
   ];

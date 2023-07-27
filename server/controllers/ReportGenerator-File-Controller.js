@@ -1,4 +1,4 @@
-// Experiment Controller
+// ReportGenerator-File-Controller
 // Author: Jonathan Haddad
 // Date created: 20-07-2023
 

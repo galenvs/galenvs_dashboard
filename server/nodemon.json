@@ -1,4 +1,3 @@
 {
-    "ignore": ["server/records/"]
-  }
-  
+  "ignore": ["server/records/", "**/uploads/**/*" ]
+}

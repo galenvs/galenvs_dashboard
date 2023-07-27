@@ -12,7 +12,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { CircularProgress, Container, InputLabel, OutlinedInput, Alert, Grid , Tooltip } from "@mui/material";
 import { DropzoneArea } from "material-ui-dropzone";
-import { StyledContainer, StyledFormControl, StyledTypography, StyledButton, StyledBox } from "../style/styles";
+import { StyledContainer, StyledFormControl, StyledTypography, StyledButton, StyledBox } from "../../style/styles";
 import { IconButton } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 

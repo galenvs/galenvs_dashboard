@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { uploadExperiment, getReport } = require("../controllers/Experiment-Controller");
+const { uploadExperiment, getReport } = require("../controllers/ReportGenerator-File-Controller");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");

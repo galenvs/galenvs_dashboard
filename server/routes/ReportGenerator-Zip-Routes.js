@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { uploadZip, getZipReport } = require("../controllers/ZipUpload-Controller");
+const { uploadZip, getZipReport } = require("../controllers/ReportGenerator-Zip-Controller");
 const multer = require("multer");
 const { generateDatenID } = require("../utilities");
 

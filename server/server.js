@@ -2,8 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const experimentRoutes = require('./routes/Experiment-Routes');
-const zipUploadRoutes = require('./routes/ZipUpload-Routes');
+const ReportGeneratorFileRoutes = require('./routes/ReportGenerator-File-Routes');
+const ReportGeneratorZipRoutes = require('./routes/ReportGenerator-Zip-Routes');
 const recordsRoutes = require('./routes/Record-Routes');
 const filterRoutes = require('./routes/Filter-Routes');
 require('dotenv').config();
@@ -26,8 +26,8 @@ db.once('open', function() {
 // Static file serving middleware for the records directory
 app.use('/records', express.static('records'));
 
-app.use('/api', experimentRoutes);
-app.use('/api', zipUploadRoutes);
+app.use('/api', ReportGeneratorFileRoutes);
+app.use('/api', ReportGeneratorZipRoutes);
 app.use('/api/records', recordsRoutes);
 app.use('/api/filter', filterRoutes);
 
