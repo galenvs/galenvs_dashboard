@@ -5,7 +5,8 @@ import { MenuItem } from "@mui/material";
 import { StyledContainer, StyledBox, StyledSelect } from "../style/styles";
 
 const ReportGenrator: React.FC = () => {
-  const [selectedOption, setSelectedOption] = useState("zipUpload"); // Set the default selection to "zipUpload"
+  const [selectedOption, setSelectedOption] = useState("zipUpload"); 
+  const [reportUrl, setReportUrl] = useState<string>('');
 
   const handleOptionChange = (event: React.ChangeEvent<{ value: string }>) => {
     setSelectedOption(event.target.value);
@@ -18,7 +19,7 @@ const ReportGenrator: React.FC = () => {
         <MenuItem value="fileUpload">File Upload</MenuItem>
       </StyledSelect>
 
-      {selectedOption === "zipUpload" ? <ZipUpload /> : <FileUpload />}
+      {selectedOption === "zipUpload" ? <ZipUpload setReportUrl={setReportUrl}  /> : <FileUpload setReportUrl={setReportUrl} />}
 
       {/* Your other components and elements go here */}
     </StyledContainer>

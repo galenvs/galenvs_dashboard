@@ -7,7 +7,7 @@ import ReportGenrator from './pages/ReportGenrator'
 import React, { useState } from 'react';
 
 const App: React.FC = () => {
-    const [reportUrl, setReportUrl] = useState<string>('');
+   
 
     return (
         <Router>
