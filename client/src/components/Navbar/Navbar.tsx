@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
     return (
       <Toolbar>
         <Box sx={{ flexGrow: 1, marginTop: "0.5rem" }}>
-          <img src={logo} alt="logo" height={40} />
+          <img src={logo} alt="logo" height={25} />
         </Box>
         {getMenuButtons()}
       </Toolbar>
