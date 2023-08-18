@@ -136,3 +136,123 @@ export const StyledSelect = styled(Select)`
   }
 `;
 
+
+  const sectionStyle = {
+    width: '40%', 
+    margin: '20px', 
+    padding: '30px', 
+    border: '1px solid #e6e6e6', 
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', 
+    borderRadius: '8px',
+    backgroundColor: '#f9f9f9',
+    textAlign: 'center',
+    transition: 'all 0.3s'
+  };
+
+  const buttonStyle = {
+    textDecoration: 'none',
+    color: 'white',
+    padding: '10px 20px',
+    margin: '10px',
+    background: '#8A1538',
+    borderRadius: '25px',
+    display: 'inline-flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '10px',
+    transition: 'all 0.3s',
+    fontSize: '14px',
+    fontWeight: '500',
+    width: '80%',
+    '&:hover': {
+      background: '#a01d4b'
+    }
+  };
+
+
+  export const landingPageStyles = {
+    container: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '80vh',
+      background: '#fff',
+      fontFamily: "'Roboto', sans-serif",
+      padding: '0 20px',  
+    },
+    header: {
+      marginBottom: '30px',
+      textAlign: 'center',
+    },
+    headerTitle: {
+      fontSize: '2rem',  
+      fontWeight: '700',
+      color: '#333',
+      '@media (max-width: 600px)': {  
+        fontSize: '1.5rem',
+      }
+    },
+    headerSubtitle: {
+      fontSize: '1.2rem',
+      color: '#555',
+      '@media (max-width: 600px)': {
+        fontSize: '1rem',
+      }
+    },
+    flexContainer: {
+      display: 'flex',
+      width: '100%',
+      justifyContent: 'center',
+      flexWrap: 'wrap',  
+    },
+    section: {
+      width: '40%',
+      margin: '20px',
+      padding: '30px',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.08)',
+      borderRadius: '50px',
+      backgroundColor: '#f9f9f9',
+      textAlign: 'center',
+      transition: 'all 0.3s',
+      flexDirection: 'column',
+      alignItems: 'center',  
+      justifyContent: 'center',  
+      '@media (max-width: 800px)': {  
+        width: '80%',
+        margin: '10px 0',
+        padding: '20px',
+      }
+    },
+    logo: {
+      maxWidth: '80%',  // set a maximum width as a percentage of the container
+      maxHeight: '50%',  // set a maximum height as a percentage of the container
+      marginBottom: '20px',
+    },
+    button: {
+      textDecoration: 'none',
+      color: 'white',
+      padding: '10px 20px',
+      margin: '10px',
+      background: '#8A1538',
+      borderRadius: '25px',
+      display: 'inline-flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: '10px',
+      transition: 'all 0.3s',
+      fontSize: '14px',
+      fontWeight: '500',
+      width: '80%',
+      '&:hover': {
+        background: '#a01d4b',
+      },
+      '@media (max-width: 600px)': {
+        fontSize: '12px',
+        padding: '8px 16px',
+      }
+    },
+  };
+  
+  
+  

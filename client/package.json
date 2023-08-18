@@ -17,10 +17,12 @@
     "@mui/material": "^5.14.0",
     "@mui/system": "^5.14.1",
     "axios": "^1.4.0",
+    "framer-motion": "^10.16.0",
     "install": "^0.13.0",
     "material-ui-dropzone": "^3.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-morph": "^0.4.0",
     "react-router-dom": "^6.14.2"
   },
   "devDependencies": {

@@ -1,87 +1,79 @@
-import React, { useState } from 'react';
-import { AppBar, Toolbar, Box, Button, IconButton, Drawer, List, ListItem, ListItemText, ListItemIcon } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import FolderZipIcon from '@mui/icons-material/FolderZip';
-import UploadFileIcon from '@mui/icons-material/Publish';
-import ListIcon from '@mui/icons-material/List';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import logo from '../../assets/ngslogo.svg';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { AppBar, Toolbar, Box, Button, IconButton, Drawer, List, ListItem, ListItemText } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import mainLogo from "../../assets/logos/mainPageLogo.svg";
+import ngsLogo from "../../assets/logos/ngsLogo.svg";
+import predictorsLogo from "../../assets/logos/predictorsLogo.svg";
+import { Link } from "react-router-dom";
+import { motion, useAnimation } from "framer-motion";
 
 const Navbar: React.FC = () => {
-  const [mobileView, setMobileView] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
+  const [hovered, setHovered] = useState(false);
+  const location = useLocation();
 
   const handleResize = () => {
-    return window.innerWidth <= 900 ? setMobileView(true) : setMobileView(false);
+    setIsMobile(window.innerWidth <= 900);
   };
 
-  window.addEventListener('resize', handleResize);
-
-  React.useEffect(() => {
-    handleResize();
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
-  const displayDesktop = () => {
-    return (
-      <Toolbar>
-        <Box sx={{ flexGrow: 1, marginTop: "0.5rem" }}>
-          <img src={logo} alt="logo" height={25} />
-        </Box>
-        {getMenuButtons()}
-      </Toolbar>
-    );
+  const isPortal = location.pathname === "/";
+
+  const headersData = isPortal
+    ? []
+    : location.pathname.includes("/ngs")
+    ? [
+        { label: "📊 Report Generator", href: "/ngs/reportGenerator" },
+        { label: "📁 Records", href: "/ngs/records" },
+        { label: "🔍 Filter", href: "/ngs/tableFilter" },
+      ]
+    : [
+        { label: "🔬 Pathogen", href: "/predictor/pathogen" },
+        { label: "🩸 Blood ", href: "/predictor/blood" },
+        { label: "🧬 Else ", href: "/predictor/else" },
+      ];
+
+  const getLogoSrc = () => {
+    if (location.pathname.includes("/ngs")) {
+      return ngsLogo;
+    } else if (location.pathname.includes("/predictor")) {
+      return predictorsLogo;
+    } else {
+      return mainLogo;
+    }
+  };
+  const controls = useAnimation();
+
+  const handleMouseEnter = () => {
+    controls.start("hovered");
+    setHovered(true);
   };
 
-  const displayMobile = () => {
-    const handleDrawerOpen = () => setDrawerOpen(true);
-    const handleDrawerClose = () => setDrawerOpen(false);
-
-    return (
-      <Toolbar>
-        <Box sx={{ flexGrow: 1, marginTop: "0.5rem" }}>
-          <img src={logo} alt="logo" height={40} />
-        </Box>
-        <IconButton edge="start" color="inherit" aria-label="menu" sx={{ marginRight: "auto" }} onClick={handleDrawerOpen}>
-          <MenuIcon />
-        </IconButton>
-
-        <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerClose}>
-          <List>{getDrawerChoices()}</List>
-        </Drawer>
-      </Toolbar>
-    );
+  const handleMouseLeave = () => {
+    controls.start("unhovered");
+    setHovered(false);
   };
 
-  const getDrawerChoices = () => {
-    return headersData.map(({ label, href, icon }) => {
-      return (
-        <Link key={label} to={href} style={{ textDecoration: 'none' }}>
-          <ListItem button>
-            <ListItemIcon>{icon}</ListItemIcon>
-            <ListItemText primary={label} sx={{ color: '#8a1538' }}/>
-          </ListItem>
-        </Link>
-      );
-    });
+  const imageVariants = {
+    hovered: {
+      scale: 1.05,
+      opacity: 0.9,
+      transition: { duration: 0.9 },
+    },
+    unhovered: {
+      scale: 1,
+      opacity: 1,
+      transition: { duration: 2.3 },
+    },
   };
-
-  const getMenuButtons = () => {
-    return headersData.map(({ label, href }) => {
-      return (
-        <Button key={label} variant="contained" color="primary" to={href} component={Link}  sx={{ borderRadius: 25, padding: "5px 10px", margin: "0px 10px", fontSize: "0.8rem", color: "#fff", backgroundColor: "#8a1538", '&:hover': { backgroundColor: '#000' } }}>
-          {label}
-        </Button>
-      );
-    });
-  };
-
-  const headersData = [
-    { label: 'Report Generator', href: '/', icon: <UploadFileIcon /> },
-    { label: 'Records', href: '/records', icon: <ListIcon /> },
-    { label: 'Filter', href: '/tableFilter', icon: <FilterListIcon /> },
-  ];
-
   return (
     <AppBar
       position="static"
@@ -95,7 +87,36 @@ const Navbar: React.FC = () => {
         boxShadow: "none",
       }}
     >
-      {mobileView ? displayMobile() : displayDesktop()}
+      <Toolbar style={{ justifyContent: isPortal ? "center" : "space-between" }}>
+        <Box sx={{ flexGrow: isPortal ? 0 : 1, marginTop: "0.5rem" }}>
+          <Link to="/">
+            <motion.img src={hovered ? mainLogo : getLogoSrc()} alt="logo" height={35} variants={imageVariants} initial="unhovered" animate={controls} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} />
+          </Link>
+        </Box>
+        {!isPortal &&
+          !isMobile &&
+          headersData.map(({ label, href }) => (
+            <Button key={label} variant="contained" color="primary" to={href} component={Link} sx={{ borderRadius: 25, padding: "5px 10px", margin: "0px 10px", fontSize: "0.8rem", color: "#fff", backgroundColor: "#8a1538", "&:hover": { backgroundColor: "#000" } }}>
+              {label}
+            </Button>
+          ))}
+        {!isPortal && isMobile && (
+          <IconButton edge="start" color="inherit" onClick={() => setDrawerOpen(!drawerOpen)}>
+            <MenuIcon />
+          </IconButton>
+        )}
+        <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+          <List>
+            {headersData.map(({ label, href }) => (
+              <Link key={label} to={href} style={{ textDecoration: "none" }}>
+                <ListItem button onClick={() => setDrawerOpen(false)}>
+                  <ListItemText primary={label} sx={{ color: "#8a1538" }} />
+                </ListItem>
+              </Link>
+            ))}
+          </List>
+        </Drawer>
+      </Toolbar>
     </AppBar>
   );
 };

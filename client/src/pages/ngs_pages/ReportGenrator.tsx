@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import FileUpload from "../components/ReportGenrators/FileUpload";
-import ZipUpload from "../components/ReportGenrators/ZipUpload";
+import FileUpload from "../../components/ngs_components/report_genrator_components/FileUpload";
+import ZipUpload from "../../components/ngs_components/report_genrator_components/ZipUpload";
 import { MenuItem } from "@mui/material";
-import { StyledContainer, StyledBox, StyledSelect } from "../style/styles";
+import { StyledContainer, StyledBox, StyledSelect } from "../../style/styles";
 
 const ReportGenrator: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState("zipUpload"); 
