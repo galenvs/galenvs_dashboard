@@ -20,8 +20,6 @@ const ReportGenerator: React.FC = () => {
       </StyledSelect>
 
       {selectedOption === "zipUpload" ? <ZipUpload setReportUrl={setReportUrl}  /> : <FileUpload setReportUrl={setReportUrl} />}
-
-      {/* Your other components and elements go here */}
     </StyledContainer>
   );
 };

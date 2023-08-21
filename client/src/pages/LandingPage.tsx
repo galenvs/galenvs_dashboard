@@ -32,26 +32,26 @@ const LandingPage: React.FC = () => {
         <motion.div style={styles.section} whileHover="hover" variants={sectionVariants}>
           <img src={predictorsLogo} alt="Predictors Logo" height={40} style={styles.logo} />
           <motion.div whileHover={buttonHover}>
-            <Link to="/predictor/pathogen" style={styles.button}><span>🔬</span> Pathogen</Link>
+            <Link to="/predictor/pathogen" style={styles.button}>Pathogen</Link>
           </motion.div>
           <motion.div whileHover={buttonHover}>
-            <Link to="/predictor/blood" style={styles.button}><span>🩸</span> Blood</Link>
+            <Link to="/predictor/blood" style={styles.button}>Blood</Link>
           </motion.div>
           <motion.div whileHover={buttonHover}>
-            <Link to="/predictor/else" style={styles.button}><span>🧬</span> Else</Link>
+            <Link to="/predictor/else" style={styles.button}>Else</Link>
           </motion.div>
         </motion.div>
         
         <motion.div style={styles.section} whileHover="hover" variants={sectionVariants}>
           <img src={ngsLogo} alt="NGS Logo" height={40} style={styles.logo} />
           <motion.div whileHover={buttonHover}>
-            <Link to="/ngs/reportGenerator" style={styles.button}><span>📊</span> Report Generator</Link>
+            <Link to="/ngs/reportGenerator" style={styles.button}>Report Generator</Link>
           </motion.div>
           <motion.div whileHover={buttonHover}>
-            <Link to="/ngs/records" style={styles.button}><span>📁</span> Records</Link>
+            <Link to="/ngs/records" style={styles.button}>Records</Link>
           </motion.div>
           <motion.div whileHover={buttonHover}>
-            <Link to="/ngs/tableFilter" style={styles.button}><span>🔍</span> Table Filter</Link>
+            <Link to="/ngs/tableFilter" style={styles.button}>Table Filter</Link>
           </motion.div>
         </motion.div>
       </div>

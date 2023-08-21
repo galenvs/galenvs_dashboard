@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { AppBar, Toolbar, Box, Button, IconButton, Drawer, List, ListItem, ListItemText } from "@mui/material";
+import { AppBar, Toolbar, Box, IconButton, Drawer, List, ListItem, ListItemText } from "@mui/material";
+import { StyledTypography } from "../../style/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import mainLogo from "../../assets/logos/mainPageLogo.svg";
 import ngsLogo from "../../assets/logos/ngsLogo.svg";
@@ -31,14 +32,14 @@ const Navbar: React.FC = () => {
     ? []
     : location.pathname.includes("/ngs")
     ? [
-        { label: "📊 Report Generator", href: "/ngs/reportGenerator" },
-        { label: "📁 Records", href: "/ngs/records" },
-        { label: "🔍 Filter", href: "/ngs/tableFilter" },
+        { label: "Report Generator", href: "/ngs/reportGenerator" },
+        { label: "Records", href: "/ngs/records" },
+        { label: "Filter", href: "/ngs/tableFilter" },
       ]
     : [
-        { label: "🔬 Pathogen", href: "/predictor/pathogen" },
-        { label: "🩸 Blood ", href: "/predictor/blood" },
-        { label: "🧬 Else ", href: "/predictor/else" },
+        { label: "Pathogen", href: "/predictor/pathogen" },
+        { label: "Blood ", href: "/predictor/blood" },
+        { label: "Else ", href: "/predictor/else" },
       ];
 
   const getLogoSrc = () => {
@@ -96,9 +97,19 @@ const Navbar: React.FC = () => {
         {!isPortal &&
           !isMobile &&
           headersData.map(({ label, href }) => (
-            <Button key={label} variant="contained" color="primary" to={href} component={Link} sx={{ borderRadius: 25, padding: "5px 10px", margin: "0px 10px", fontSize: "0.8rem", color: "#fff", backgroundColor: "#8a1538", "&:hover": { backgroundColor: "#000" } }}>
-              {label}
-            </Button>
+            <Link key={label} to={href} style={{ textDecoration: "none", marginRight: 20 }}>
+              <StyledTypography
+                variant="h5"
+                style={{
+                  cursor: "pointer",
+                  color: location.pathname === href ? "#8a1538" : "black",
+                  borderBottom: location.pathname === href ? "2px solid #8a1538" : "none",
+                  paddingBottom: 5,
+                }}
+              >
+                {label}
+              </StyledTypography>
+            </Link>
           ))}
         {!isPortal && isMobile && (
           <IconButton edge="start" color="inherit" onClick={() => setDrawerOpen(!drawerOpen)}>
