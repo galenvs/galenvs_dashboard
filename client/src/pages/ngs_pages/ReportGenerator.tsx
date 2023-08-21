@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import FileUpload from "../../components/ngs_components/report_genrator_components/FileUpload";
-import ZipUpload from "../../components/ngs_components/report_genrator_components/ZipUpload";
+import FileUpload from "../../components/ngs_components/report_generator_components/FileUpload";
+import ZipUpload from "../../components/ngs_components/report_generator_components/ZipUpload";
 import { MenuItem } from "@mui/material";
 import { StyledContainer, StyledBox, StyledSelect } from "../../style/styles";
 
-const ReportGenrator: React.FC = () => {
+const ReportGenerator: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState("zipUpload"); 
   const [reportUrl, setReportUrl] = useState<string>('');
 
@@ -26,4 +26,4 @@ const ReportGenrator: React.FC = () => {
   );
 };
 
-export default ReportGenrator;
+export default ReportGenerator;

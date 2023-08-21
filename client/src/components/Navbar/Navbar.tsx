@@ -66,12 +66,12 @@ const Navbar: React.FC = () => {
     hovered: {
       scale: 1.05,
       opacity: 0.9,
-      transition: { duration: 0.9 },
+      transition: { duration: 2.0 },
     },
     unhovered: {
       scale: 1,
       opacity: 1,
-      transition: { duration: 2.3 },
+      transition: { duration: 2.0 },
     },
   };
   return (

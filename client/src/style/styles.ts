@@ -176,7 +176,7 @@ export const StyledSelect = styled(Select)`
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      height: '80vh',
+      height: '95vh',
       background: '#fff',
       fontFamily: "'Roboto', sans-serif",
       padding: '0 20px',  
