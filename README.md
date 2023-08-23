@@ -9,7 +9,7 @@ Galenvs Dashboard is a unified web application that provides an intuitive interf
   - Seamlessly access and manage your generated reports, ensuring you have full control over your NGS data analysis workflow.
   - Efficiently filter CNV and SNP sample results, preparing them for easy and insightful customer viewing and analysis.
 
-- **Machine Learning Predictor Features**:
+- **Predictors Dashboard (Machine Learning Predictor) Features**:
   - TBA
 
 ## Tech Stack
