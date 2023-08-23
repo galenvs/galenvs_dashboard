@@ -75,6 +75,19 @@ const Navbar: React.FC = () => {
       transition: { duration: 2.0 },
     },
   };
+
+  const navItemVariants = {
+    hover: {
+      scale: 1.1,
+      color: "#8a1538",
+      transition: { type: "spring", stiffness: 300 },
+    },
+    unhover: {
+      scale: 1,
+      color: "black",
+      transition: { type: "spring", stiffness: 300 },
+    },
+  };
   return (
     <AppBar
       position="static"
@@ -98,17 +111,19 @@ const Navbar: React.FC = () => {
           !isMobile &&
           headersData.map(({ label, href }) => (
             <Link key={label} to={href} style={{ textDecoration: "none", marginRight: 20 }}>
-              <StyledTypography
-                variant="h5"
-                style={{
-                  cursor: "pointer",
-                  color: location.pathname === href ? "#8a1538" : "black",
-                  borderBottom: location.pathname === href ? "2px solid #8a1538" : "none",
-                  paddingBottom: 5,
-                }}
-              >
-                {label}
-              </StyledTypography>
+              <motion.div variants={navItemVariants} initial="unhover" whileHover="hover" whileTap="hover">
+                <StyledTypography
+                  variant="h5"
+                  style={{
+                    cursor: "pointer",
+                    color: location.pathname === href ? "#8a1538" : "black",
+                    borderBottom: location.pathname === href ? "2px solid #8a1538" : "none",
+                    paddingBottom: 5,
+                  }}
+                >
+                  {label}
+                </StyledTypography>
+              </motion.div>
             </Link>
           ))}
         {!isPortal && isMobile && (
