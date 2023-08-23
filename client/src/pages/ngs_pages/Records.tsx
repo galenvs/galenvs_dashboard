@@ -3,7 +3,7 @@ import axios from "axios";
 import { List, ListItem, ListItemText, IconButton, Grid, Container, ListItemSecondaryAction, Dialog, DialogActions, DialogTitle, Button, CircularProgress, Typography ,Box } from "@material-ui/core";
 import { CloudDownloadOutlined, Delete, FolderOpen } from "@material-ui/icons";
 import { Alert } from "@mui/material";
-import { StyledTypography, DirectoryItem, StyledTextField } from "../style/styles";
+import { StyledTypography, DirectoryItem, StyledTextField } from "../../style/styles";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import SimCardDownloadOutlinedIcon from "@mui/icons-material/SimCardDownloadOutlined";
 import KeyboardArrowLeftOutlinedIcon from "@mui/icons-material/KeyboardArrowLeftOutlined";
