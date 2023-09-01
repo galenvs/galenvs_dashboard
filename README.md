@@ -10,7 +10,7 @@ Galenvs Dashboard is a unified web application that provides an intuitive interf
   - Efficiently filter CNV and SNP sample results, preparing them for easy and insightful customer viewing and analysis.
 
 - **Predictors Dashboard (Machine Learning Predictor) Features**:
-  - TBA
+ - Pathogen Delta Cq Predictor:  predict pathogen presence and changes in cycle quantification (Cq) values. This predictor offers insights into the relative abundance and dynamics of pathogens within your samples.
 
 ## Tech Stack
 The project is built using the MERN stack with TypeScript. The report generation is accomplished using R Markdown. Here's a brief overview of the tech stack:
@@ -50,5 +50,20 @@ To set up and install the Galenvs Dashboard on your local machine, follow these 
 8. Start the server by running `npm run dev` in the server directory.
 
 9. In a separate terminal, start the client by running `npm run dev -- --host` in the client directory.
+
+
+## Important Notes About This Project's Further Development
+
+### 1. Pathogen Predictors Development:
+- The pathogen predictors were preprocessed, trained, and optimized using this [Google Colab Notebook](https://colab.research.google.com/drive/1S4evNfZmwAfr1tqi9OYh40RuNusimOdb?usp=sharing#scrollTo=-eP5engoL7AK).
+- The Google Colab notebook is organized into distinct phases and sub-phases or steps. All procedures and methodologies are thoroughly documented within the notebook.
+- It's imperative to execute everything in the specified order: Initialization -> Phase 1 -> Phase 2.
+- Upon completion, an output file named `trained_model.pkl` will be generated and saved in the runtime. This file should be saved and subsequently placed within the `server/predictors_data_and_scripts` directory for integration.
+
+### 2. Predictors Development for the Pathogen Kit:
+- For the ongoing development of the predictors for the pathogen kit, consider the following steps (note that the frontend for the predictors is still under development and requires further evaluation):
+  - The recipes files should be formatted either as SQL or MongoDB documents. This ensures more efficient and reliable access to the fields from both the frontend (as selectable options) and the backend.
+  - Backend routes and controller logic should be implemented to facilitate the retrieval of these recipe files.
+  - Input restrictions must be incorporated into the frontend. This includes defining the acceptable ranges and types of inputs for each field to ensure data integrity and accuracy.
 
 
