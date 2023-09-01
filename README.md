@@ -51,6 +51,7 @@ To set up and install the Galenvs Dashboard on your local machine, follow these 
 
 9. In a separate terminal, start the client by running `npm run dev -- --host` in the client directory.
 
+Warning: Please ensure the existence of 'uploads' and 'records' folders within the 'server' directory to avoid any issues.
 
 ## Important Notes About This Project's Further Development
 
@@ -65,5 +66,6 @@ To set up and install the Galenvs Dashboard on your local machine, follow these 
   - The recipes files should be formatted either as SQL or MongoDB documents. This ensures more efficient and reliable access to the fields from both the frontend (as selectable options) and the backend.
   - Backend routes and controller logic should be implemented to facilitate the retrieval of these recipe files.
   - Input restrictions must be incorporated into the frontend. This includes defining the acceptable ranges and types of inputs for each field to ensure data integrity and accuracy.
+  - Error handling should be enhanced in the predictor's Python script. Implementing comprehensive error handling will ensure that any issues or anomalies during the prediction process are captured and addressed appropriately.
 
 
