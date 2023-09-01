@@ -6,6 +6,8 @@ const ReportGeneratorFileRoutes = require('./routes/ReportGenerator-File-Routes'
 const ReportGeneratorZipRoutes = require('./routes/ReportGenerator-Zip-Routes');
 const recordsRoutes = require('./routes/Record-Routes');
 const filterRoutes = require('./routes/Filter-Routes');
+const pathogenMLRouter = require("./routes/PathogenML-Routes");
+
 require('dotenv').config();
 const app = express();
 
@@ -30,5 +32,6 @@ app.use('/api', ReportGeneratorFileRoutes);
 app.use('/api', ReportGeneratorZipRoutes);
 app.use('/api/records', recordsRoutes);
 app.use('/api/filter', filterRoutes);
+app.use('/api', pathogenMLRouter);
 
 app.listen(process.env.PORT || 5000, () => console.log(`Server is running on port ${process.env.PORT || 5000}`));

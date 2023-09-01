@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { Grid, FormControl, MenuItem } from "@mui/material";
 import { StyledTypography, StyledButton, StyledTextField, StyledContainer, StyledPaper } from "../../style/styles";
 
 const PathogenPredictors: React.FC = () => {
   const [formData, setFormData] = useState<any>({});
+  const [predictionResult, setPredictionResult] = useState<string | null>(null); 
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -13,14 +15,20 @@ const PathogenPredictors: React.FC = () => {
     }));
   };
 
-  const handleSubmit = () => {
-    // TODO: Send formData to the backend for prediction
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/predict`, formData);
+      setPredictionResult(response.data);
+    } catch (error) {
+      console.error("Error making prediction:", error);
+      setPredictionResult("Error making prediction");
+    }
   };
 
   return (
     <StyledContainer>
       <StyledTypography variant="h4" align="center" gutterBottom>
-        Pathogen Predictors
+        Pathogen Predictor
       </StyledTypography>
       <Grid container spacing={4}  style={{ textAlign: "center", marginTop: '20px' }}>
       {/* Lysis Information */}
@@ -113,6 +121,7 @@ const PathogenPredictors: React.FC = () => {
           </StyledButton>
         </Grid>
       </Grid>
+      {predictionResult && <div>Prediction Result: {predictionResult}</div>}
     </StyledContainer>
   );
 };
