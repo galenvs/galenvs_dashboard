@@ -10,7 +10,7 @@ Galenvs Dashboard is a unified web application that provides an intuitive interf
   - Efficiently filter CNV and SNP sample results, preparing them for easy and insightful customer viewing and analysis.
 
 - **Predictors Dashboard (Machine Learning Predictor) Features**:
-  - TBA
+ - a pathogen delta cq predictor
 
 ## Tech Stack
 The project is built using the MERN stack with TypeScript. The report generation is accomplished using R Markdown. Here's a brief overview of the tech stack:
