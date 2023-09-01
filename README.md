@@ -60,7 +60,7 @@ To set up and install the Galenvs Dashboard on your local machine, follow these 
 - It's imperative to execute everything in the specified order: Initialization -> Phase 1 -> Phase 2.
 - Upon completion, an output file named `trained_model.pkl` will be generated and saved in the runtime. This file should be saved and subsequently placed within the `server/predictors_data_and_scripts` directory for integration.
 
-### 2. Predictors Development for the Pathogen Kit:
+### 2. Development That Should be Done to This App (predictors side):
 - For the ongoing development of the predictors for the pathogen kit, consider the following steps (note that the frontend for the predictors is still under development and requires further evaluation):
   - The recipes files should be formatted either as SQL or MongoDB documents. This ensures more efficient and reliable access to the fields from both the frontend (as selectable options) and the backend.
   - Backend routes and controller logic should be implemented to facilitate the retrieval of these recipe files.
